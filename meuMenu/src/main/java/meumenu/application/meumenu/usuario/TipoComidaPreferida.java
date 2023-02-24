@@ -1,6 +1,6 @@
 package meumenu.application.meumenu.usuario;
 
-public enum GostoCulinario {
+public enum TipoComidaPreferida {
 
     MEXICANA,
     BRASILEIRA,

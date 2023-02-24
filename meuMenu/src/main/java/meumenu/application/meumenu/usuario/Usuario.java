@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import meumenu.application.meumenu.endereco.Endereco;
 
 
-@Table(name = "usuarios")
+@Table(name = "usuario")
 @Entity(name = "Usuario")
 @Getter
 @NoArgsConstructor
@@ -20,21 +19,21 @@ public class  Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
-    private String email;
+    private String sobrenome;
     private String cpf;
-
+    private String email;
+    private String senha;
     @Enumerated(EnumType.STRING)
-    private GostoCulinario gostoCulinario;
+    private TipoComidaPreferida tipoComidaPreferida;
 
-    @Embedded
-    private Endereco endereco;
 
     public Usuario(DadosCadastroUsuario dados) {
 
         this.nome = dados.nome();
-        this.email = dados.email();
+        this.sobrenome = dados.sobrenome();
         this.cpf = dados.cpf();
-        this.gostoCulinario = dados.gostoCulinario();
-        this.endereco = new Endereco(dados.endereco());
+        this.email = dados.email();
+        this.senha = dados.senha();
+        this.tipoComidaPreferida = dados.tipoComidaPreferida();
     }
 }

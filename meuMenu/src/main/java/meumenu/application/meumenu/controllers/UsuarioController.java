@@ -12,7 +12,7 @@ import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 
 @RestController
-@RequestMapping("/riff/usuario")
+@RequestMapping("/meumenu/usuario")
 public class UsuarioController {
 @Autowired
     private UsuarioRepository repository;

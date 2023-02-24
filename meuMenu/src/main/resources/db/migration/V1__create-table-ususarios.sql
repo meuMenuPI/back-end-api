@@ -1,15 +1,9 @@
-create table usuarios(
-
-                        id int primary key not null auto_increment,
-                        nome varchar(100) not null,
-                        email varchar(100) not null,
-                        cpf varchar(100) not null ,
-                        gosto_culinario varchar(100) not null,
-                        logradouro varchar(100) not null,
-                        bairro varchar(100) not null,
-                        cep varchar(9) not null,
-                        complemento varchar(100),
-                        numero varchar(20),
-                        uf char(2) not null,
-                        cidade varchar(100) not null
+CREATE TABLE usuario (
+                         idUsuario int primary key not null auto_increment,
+                         nome VARCHAR(45),
+                         sobrenome VARCHAR(45),
+                         cpf CHAR(11),
+                         email VARCHAR(99),
+                         senha VARCHAR(99),
+                         tipo_comida_preferida VARCHAR(45)
 );
