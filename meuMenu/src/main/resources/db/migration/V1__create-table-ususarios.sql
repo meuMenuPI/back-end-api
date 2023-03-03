@@ -1,5 +1,5 @@
 CREATE TABLE usuario (
-                         id int primary key not null auto_increment,
+                         idUsuario int primary key not null auto_increment,
                          nome VARCHAR(45),
                          sobrenome VARCHAR(45),
                          cpf CHAR(11),
@@ -10,7 +10,7 @@ CREATE TABLE usuario (
 
 
 CREATE TABLE restaurante (
-                             id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                             idRestaurante INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
                              usuario INT NOT NULL,
                              nome VARCHAR(45) NULL,
                              cnpj CHAR(14) NULL,
