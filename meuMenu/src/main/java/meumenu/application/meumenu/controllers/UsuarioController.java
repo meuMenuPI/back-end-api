@@ -28,6 +28,15 @@ public class UsuarioController {
 
     }
 
+    @PutMapping("/{id}")
+    @Transactional
+    public Usuario atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id){
+        Usuario usuario = repository.findById(id).orElseThrow();
+        usuario.setTipoComidaPreferida(dados.getTipoComidaPreferida());
+        repository.save(usuario);
+        return usuario;
+    }
+
     @PostMapping("/logar")
     @Transactional
     public Usuario logar(@RequestBody Usuario dados  ){
@@ -54,9 +63,15 @@ public class UsuarioController {
                 return b.recomendar(listaUsuario, listaRestaurante, id);
             }
         }
-
-
         return null;
+    }
+
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void deletar(@PathVariable int id){
+        Usuario usuario = repository.findById(id).orElseThrow();
+        repository.delete(usuario);
     }
 
 

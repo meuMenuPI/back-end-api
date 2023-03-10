@@ -1,10 +1,7 @@
 package meumenu.application.meumenu.usuario;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import meumenu.application.meumenu.interfaces.ClientesInterface;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,7 @@ import java.util.List;
 
 @Table(name = "usuario")
 @Entity(name = "Usuario")
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")

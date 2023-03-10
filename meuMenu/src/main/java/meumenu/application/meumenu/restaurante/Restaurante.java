@@ -1,10 +1,7 @@
 package meumenu.application.meumenu.restaurante;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import meumenu.application.meumenu.interfaces.ClientesInterface;
 import meumenu.application.meumenu.usuario.DadosCadastroUsuario;
 import meumenu.application.meumenu.usuario.TipoComidaPreferida;
@@ -15,7 +12,7 @@ import java.util.List;
 
 @Table(name = "restaurante")
 @Entity(name = "Restaurante")
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")

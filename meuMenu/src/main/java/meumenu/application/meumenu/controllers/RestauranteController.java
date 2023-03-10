@@ -31,6 +31,16 @@ public class RestauranteController {
 
     }
 
+    @PutMapping("/{id}")
+    @Transactional
+    public void atualizar(@RequestBody @Valid Restaurante dados, @PathVariable int id){
+        Restaurante restaurante = repository.findById(id).orElseThrow();
+        restaurante.setSite(dados.getSite());
+        restaurante.setTelefone(dados.getTelefone());
+        restaurante.setEstrela(dados.getEstrela());
+        repository.save(restaurante);
+    }
+
     @GetMapping("/recomendar/{id}")
     @Transactional
     public List<Usuario> recomendar(@PathVariable int id){
@@ -43,9 +53,14 @@ public class RestauranteController {
                 return r.recomendar(listaUsuario, listaRestaurante, id);
             }
         }
-
-
         return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void deletar(@PathVariable int id){
+        Restaurante restaurante = repository.findById(id).orElseThrow();
+        repository.delete(restaurante);
     }
 
 
