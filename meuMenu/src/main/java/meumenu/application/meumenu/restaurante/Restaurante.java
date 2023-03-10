@@ -6,6 +6,7 @@ import meumenu.application.meumenu.interfaces.ClientesInterface;
 import meumenu.application.meumenu.usuario.DadosCadastroUsuario;
 import meumenu.application.meumenu.usuario.TipoComidaPreferida;
 import meumenu.application.meumenu.usuario.Usuario;
+import meumenu.application.meumenu.usuario.UsuarioDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class Restaurante implements ClientesInterface {
 
     @Override
     public List recomendar(List<Usuario> lu, List<Restaurante> lr, int id) {
-        List<Usuario> listaRecomendacao = new ArrayList<>();
+        List<UsuarioDTO> listaRecomendacao = new ArrayList<>();
 
         Restaurante tempR = lr.get(0);
         for(Restaurante r : lr){
@@ -53,7 +54,7 @@ public class Restaurante implements ClientesInterface {
         }
         for(Usuario u : lu){
             if(u.getTipoComidaPreferida().name().equals(tempR.getEspecialidade().name())){
-                listaRecomendacao.add(u);
+                listaRecomendacao.add(new UsuarioDTO(u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
             }
         }
         return listaRecomendacao;

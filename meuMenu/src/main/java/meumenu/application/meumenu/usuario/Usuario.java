@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import meumenu.application.meumenu.interfaces.ClientesInterface;
 import meumenu.application.meumenu.restaurante.Restaurante;
+import meumenu.application.meumenu.restaurante.RestauranteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import meumenu.application.meumenu.usuario.DadosCadastroUsuario;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
@@ -43,7 +44,7 @@ public class  Usuario implements ClientesInterface {
 
     @Override
     public List recomendar(List<Usuario> lu, List<Restaurante> lr, int id) {
-        List<Restaurante> listaRecomendacao = new ArrayList<>();
+        List<RestauranteDTO> listaRecomendacao = new ArrayList<>();
 
         Usuario tempU = lu.get(0);
         for(Usuario u : lu){
@@ -53,7 +54,7 @@ public class  Usuario implements ClientesInterface {
         }
         for(Restaurante r : lr){
             if(r.getEspecialidade().name().equals(tempU.getTipoComidaPreferida().name())){
-                listaRecomendacao.add(r);
+                listaRecomendacao.add(new RestauranteDTO(r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela()));
             }
         }
         return listaRecomendacao;
