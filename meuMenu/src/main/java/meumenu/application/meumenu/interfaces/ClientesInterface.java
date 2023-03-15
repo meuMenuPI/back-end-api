@@ -6,5 +6,5 @@ import meumenu.application.meumenu.usuario.Usuario;
 import java.util.List;
 
 public interface ClientesInterface {
-    public List recomendar(List<Usuario> lu, List<Restaurante> lr, int id);
+    public List recomendar(List<Usuario> listaUsuario, List<Restaurante> listaRestaurante, int id);
 }

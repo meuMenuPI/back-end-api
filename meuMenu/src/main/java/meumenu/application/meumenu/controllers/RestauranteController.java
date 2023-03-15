@@ -47,19 +47,24 @@ public class RestauranteController {
 
     @PutMapping("/{id}")
     @Transactional
-    public void atualizar(@RequestBody @Valid Restaurante dados, @PathVariable int id){
+    public String atualizar(@RequestBody @Valid Restaurante dados, @PathVariable int id){
         Restaurante restaurante = repository.findById(id).orElseThrow();
+        restaurante.setNome(dados.getNome());
         restaurante.setSite(dados.getSite());
         restaurante.setTelefone(dados.getTelefone());
         restaurante.setEstrela(dados.getEstrela());
         repository.save(restaurante);
+
+        return "Seu restaurante foi atualizado com sucesso";
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void deletar(@PathVariable int id){
+    public String deletar(@PathVariable int id){
         Restaurante restaurante = repository.findById(id).orElseThrow();
         repository.delete(restaurante);
+
+        return "Seu restaurante foi deletado com sucesso";
     }
 
     @GetMapping("/recomendar/{id}")

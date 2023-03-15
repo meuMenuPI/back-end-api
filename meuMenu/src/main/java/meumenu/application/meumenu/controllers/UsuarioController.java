@@ -27,7 +27,6 @@ public class UsuarioController {
     @Transactional
     public void cadastrar(@RequestBody @Valid DadosCadastroUsuario dados){
         repository.save(new Usuario(dados));
-
     }
 
     @GetMapping
@@ -43,11 +42,11 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @Transactional
-    public Usuario atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id){
+    public String atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id){
         Usuario usuario = repository.findById(id).orElseThrow();
         usuario.setTipoComidaPreferida(dados.getTipoComidaPreferida());
         repository.save(usuario);
-        return usuario;
+        return "Usuário atualizado com sucesso";
     }
 
     @PostMapping("/logar")
@@ -66,9 +65,11 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void deletar(@PathVariable int id){
+    public String deletar(@PathVariable int id){
         Usuario usuario = repository.findById(id).orElseThrow();
         repository.delete(usuario);
+
+        return "Usuário deletado com sucesso";
     }
 
     @GetMapping("/recomendar/{id}")
@@ -84,7 +85,6 @@ public class UsuarioController {
                 return b.recomendar(listaUsuario, listaRestaurante, id);
             }
         }
-
         return null;
     }
 

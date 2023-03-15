@@ -43,16 +43,16 @@ public class Restaurante implements ClientesInterface {
     }
 
     @Override
-    public List recomendar(List<Usuario> lu, List<Restaurante> lr, int id) {
+    public List recomendar(List<Usuario> listaUsuario, List<Restaurante> listaRestaurante, int id) {
         List<UsuarioDTO> listaRecomendacao = new ArrayList<>();
 
-        Restaurante tempR = lr.get(0);
-        for(Restaurante r : lr){
+        Restaurante tempR = listaRestaurante.get(0);
+        for(Restaurante r : listaRestaurante){
             if(r.getId() == id){
                 tempR = r;
             }
         }
-        for(Usuario u : lu){
+        for(Usuario u : listaUsuario){
             if(u.getTipoComidaPreferida().name().equals(tempR.getEspecialidade().name())){
                 listaRecomendacao.add(new UsuarioDTO(u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
             }
