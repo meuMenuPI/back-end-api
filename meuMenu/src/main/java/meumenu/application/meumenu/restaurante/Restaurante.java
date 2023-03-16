@@ -2,9 +2,7 @@ package meumenu.application.meumenu.restaurante;
 
 import jakarta.persistence.*;
 import lombok.*;
-import meumenu.application.meumenu.interfaces.ClientesInterface;
-import meumenu.application.meumenu.usuario.DadosCadastroUsuario;
-import meumenu.application.meumenu.usuario.TipoComidaPreferida;
+import meumenu.application.meumenu.interfaces.Recomendavel;
 import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
 
@@ -18,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 
-public class Restaurante implements ClientesInterface {
+public class Restaurante implements Recomendavel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,7 +27,7 @@ public class Restaurante implements ClientesInterface {
     private Especialidade especialidade;
     private String telefone;
     private String site;
-    private int estrela;
+    private Integer estrela;
 
     public Restaurante(DadosCadastroRestaurante dados) {
         this.usuario = dados.usuario();
@@ -54,7 +52,7 @@ public class Restaurante implements ClientesInterface {
         }
         for(Usuario u : listaUsuario){
             if(u.getTipoComidaPreferida().name().equals(tempR.getEspecialidade().name())){
-                listaRecomendacao.add(new UsuarioDTO(u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
+                listaRecomendacao.add(new UsuarioDTO(u.getId(),u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
             }
         }
         return listaRecomendacao;

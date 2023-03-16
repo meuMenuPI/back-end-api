@@ -5,6 +5,6 @@ import meumenu.application.meumenu.usuario.Usuario;
 
 import java.util.List;
 
-public interface ClientesInterface {
+public interface Recomendavel {
     public List recomendar(List<Usuario> listaUsuario, List<Restaurante> listaRestaurante, int id);
 }

@@ -21,7 +21,7 @@ public record DadosCadastroRestaurante (
         String telefone,
 
         String site,
-        int estrela
+        Integer estrela
 
         ){
 }

@@ -2,12 +2,9 @@ package meumenu.application.meumenu.usuario;
 
 import jakarta.persistence.*;
 import lombok.*;
-import meumenu.application.meumenu.interfaces.ClientesInterface;
+import meumenu.application.meumenu.interfaces.Recomendavel;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import meumenu.application.meumenu.usuario.DadosCadastroUsuario;
-import meumenu.application.meumenu.usuario.UsuarioRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class  Usuario implements ClientesInterface {
+public class  Usuario implements Recomendavel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -45,7 +42,6 @@ public class  Usuario implements ClientesInterface {
     @Override
     public List recomendar(List<Usuario> listaUsuario, List<Restaurante> listaRestaurante, int id) {
         List<RestauranteDTO> listaRecomendacao = new ArrayList<>();
-
         Usuario tempU = listaUsuario.get(0);
         for(Usuario u : listaUsuario){
             if(u.getId() == id){
@@ -54,7 +50,7 @@ public class  Usuario implements ClientesInterface {
         }
         for(Restaurante r : listaRestaurante){
             if(r.getEspecialidade().name().equals(tempU.getTipoComidaPreferida().name())){
-                listaRecomendacao.add(new RestauranteDTO(r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela()));
+                listaRecomendacao.add(new RestauranteDTO(r.getId(),r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela()));
             }
         }
         return listaRecomendacao;
