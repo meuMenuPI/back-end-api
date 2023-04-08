@@ -1,5 +1,6 @@
 package meumenu.application.meumenu.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
@@ -24,6 +25,7 @@ public class UsuarioController {
     private UsuarioRepository repository;
 @Autowired
     private RestauranteRepository repositoryRestaurante;
+
 
     @PostMapping("/cadastrar")
     @Transactional
