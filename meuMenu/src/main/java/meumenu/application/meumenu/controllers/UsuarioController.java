@@ -1,6 +1,8 @@
 package meumenu.application.meumenu.controllers;
 
 import jakarta.validation.Valid;
+import meumenu.application.meumenu.assossiativas.Favorito;
+import meumenu.application.meumenu.assossiativas.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
 import meumenu.application.meumenu.restaurante.RestauranteRepository;
@@ -24,6 +26,8 @@ public class UsuarioController {
     private UsuarioRepository repository;
 @Autowired
     private RestauranteRepository repositoryRestaurante;
+@Autowired
+    private FavoritoRepository repositoryFavorito;
 
     @PostMapping("/cadastrar")
     @Transactional
@@ -118,4 +122,11 @@ public class UsuarioController {
             return ResponseEntity.status(200).body(restauranteDTO);
     }
 
+    @PostMapping("/favoritar")
+    @Transactional
+    public ResponseEntity<List<Favorito>> favoritar(@RequestBody @Valid Favorito dados){
+        repositoryFavorito.save(new Favorito(dados.getFk_usuario(), dados.getFk_restaurante()));
+        List<Favorito> l = repositoryFavorito.findAll();
+        return ResponseEntity.status(200).body(l);
+    }
 }
