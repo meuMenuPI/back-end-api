@@ -1,6 +1,5 @@
 package meumenu.application.meumenu.controllers;
 
-import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.restaurante.DadosCadastroRestaurante;
 import meumenu.application.meumenu.restaurante.Restaurante;
