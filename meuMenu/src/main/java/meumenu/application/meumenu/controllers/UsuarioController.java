@@ -2,6 +2,7 @@ package meumenu.application.meumenu.controllers;
 
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.assossiativas.Favorito;
+import meumenu.application.meumenu.assossiativas.FavoritoId;
 import meumenu.application.meumenu.assossiativas.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
@@ -22,39 +23,39 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/meumenu/usuarios")
 public class UsuarioController {
-@Autowired
+    @Autowired
     private UsuarioRepository repository;
-@Autowired
+    @Autowired
     private RestauranteRepository repositoryRestaurante;
-@Autowired
+    @Autowired
     private FavoritoRepository repositoryFavorito;
 
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados){
+    public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
         repository.save(new Usuario(dados));
         List<Usuario> tempUsuario = repository.findAll();
-        UsuarioDTO usuario = new UsuarioDTO(tempUsuario.get(tempUsuario.size()-1).getId(),dados.nome(), dados.sobrenome(), dados.email(), dados.tipoComidaPreferida().name());
+        UsuarioDTO usuario = new UsuarioDTO(tempUsuario.get(tempUsuario.size() - 1).getId(), dados.nome(), dados.sobrenome(), dados.email(), dados.tipoComidaPreferida().name());
         return ResponseEntity.status(200).body(usuario);
     }
 
     @GetMapping
     @Transactional
-    public ResponseEntity<List<UsuarioDTO>> listar(){
+    public ResponseEntity<List<UsuarioDTO>> listar() {
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
         List<Usuario> tempUsuario = repository.findAll();
-        for(Usuario u : tempUsuario){
-            usuariosDTO.add(new UsuarioDTO(u.getId(),u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
+        for (Usuario u : tempUsuario) {
+            usuariosDTO.add(new UsuarioDTO(u.getId(), u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
         }
         return ResponseEntity.status(200).body(usuariosDTO);
     }
 
     @GetMapping("{id}")
     @Transactional
-    public ResponseEntity<UsuarioDTO> listarPorId(@PathVariable Integer id){
+    public ResponseEntity<UsuarioDTO> listarPorId(@PathVariable Integer id) {
         List<Usuario> tempUsuario = repository.findAll();
-        for(Usuario u : tempUsuario){
-            if(u.getId().equals(id)){
+        for (Usuario u : tempUsuario) {
+            if (u.getId().equals(id)) {
                 UsuarioDTO usuario = new UsuarioDTO(u.getId(), u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name());
                 return ResponseEntity.status(200).body(usuario);
             }
@@ -64,8 +65,8 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<String> atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id){
-        if(repository.existsById(id)){
+    public ResponseEntity<String> atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id) {
+        if (repository.existsById(id)) {
             Usuario usuario = repository.findById(id).orElseThrow();
             usuario.setTipoComidaPreferida(dados.getTipoComidaPreferida());
             repository.save(usuario);
@@ -76,12 +77,12 @@ public class UsuarioController {
 
     @PostMapping("/logar")
     @Transactional
-    public ResponseEntity<String> logar(@RequestBody Usuario dados  ){
+    public ResponseEntity<String> logar(@RequestBody Usuario dados) {
 
         List<Usuario> listaUsuario = repository.findAll();
 
-        for(Usuario b : listaUsuario){
-            if(b.getEmail().equals(dados.getEmail()) && b.getSenha().equals(dados.getSenha())){
+        for (Usuario b : listaUsuario) {
+            if (b.getEmail().equals(dados.getEmail()) && b.getSenha().equals(dados.getSenha())) {
                 return ResponseEntity.status(200).body("Login efetuado com sucesso");
             }
         }
@@ -90,8 +91,8 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<String> deletar(@PathVariable int id){
-        if(repository.existsById(id)){
+    public ResponseEntity<String> deletar(@PathVariable int id) {
+        if (repository.existsById(id)) {
             Usuario usuario = repository.findById(id).orElseThrow();
             repository.delete(usuario);
             return ResponseEntity.status(200).body("Usuário deletado com sucesso");
@@ -101,32 +102,43 @@ public class UsuarioController {
 
     @GetMapping("/recomendar/{id}")
     @Transactional
-    public ResponseEntity<List<RestauranteDTO>> recomendar(@PathVariable int id){
+    public ResponseEntity<List<RestauranteDTO>> recomendar(@PathVariable int id) {
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
         List<Usuario> listaUsuario = repository.findAll();
         List<Restaurante> listaRestaurante = repositoryRestaurante.findAll();
         List<RestauranteDTO> restauranteDTO = new ArrayList<>();
 
-        if(!repository.existsById(id)){
+        if (!repository.existsById(id)) {
             return ResponseEntity.status(404).build();
         }
 
-        for(Usuario usuario : listaUsuario){
-            if(usuario.getId() == id){
+        for (Usuario usuario : listaUsuario) {
+            if (usuario.getId() == id) {
                 restauranteDTO = (usuario.recomendar(listaUsuario, listaRestaurante, id));
             }
         }
-        if(restauranteDTO.isEmpty()){
+        if (restauranteDTO.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
-            return ResponseEntity.status(200).body(restauranteDTO);
+        return ResponseEntity.status(200).body(restauranteDTO);
     }
 
     @PostMapping("/favoritar")
     @Transactional
-    public ResponseEntity<List<Favorito>> favoritar(@RequestBody @Valid Favorito dados){
+    public ResponseEntity<List<Favorito>> favoritar(@RequestBody @Valid Favorito dados) {
         repositoryFavorito.save(new Favorito(dados.getFk_usuario(), dados.getFk_restaurante()));
         List<Favorito> l = repositoryFavorito.findAll();
         return ResponseEntity.status(200).body(l);
+    }
+
+    @DeleteMapping("/favoritar")
+    @Transactional
+    public ResponseEntity<Void> desfavoritar(@RequestBody @Valid Favorito dados) {
+        FavoritoId favorito = new FavoritoId(dados.getFk_usuario(), dados.getFk_restaurante());
+        if(repositoryFavorito.existsById(favorito)){
+            repositoryFavorito.deleteById(favorito);
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(404).build();
     }
 }

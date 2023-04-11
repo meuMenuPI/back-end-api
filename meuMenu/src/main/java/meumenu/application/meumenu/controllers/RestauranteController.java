@@ -1,6 +1,7 @@
 package meumenu.application.meumenu.controllers;
 
 import jakarta.validation.Valid;
+import meumenu.application.meumenu.assossiativas.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.DadosCadastroRestaurante;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
@@ -13,19 +14,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 @RequestMapping("/meumenu/restaurantes")
 public class RestauranteController {
-
     @Autowired
     private RestauranteRepository repository;
 
     @Autowired
     private UsuarioRepository repositoryUsuario;
 
+    @Autowired
+    private FavoritoRepository repositoryFavorito;
 
     @PostMapping("/cadastrar")
     @Transactional
@@ -117,6 +123,13 @@ public class RestauranteController {
         return ResponseEntity.status(200).body(usuarioDTO);
     }
 
+    @GetMapping("email/{id}")
+    @Transactional
+    public ResponseEntity<String[]> enviarEmail(@PathVariable int id ){
+        String vetor [] = repositoryFavorito.findAllFavoritos(id);
+        return ResponseEntity.status(200).body(vetor);
+
     }
+}
 
 

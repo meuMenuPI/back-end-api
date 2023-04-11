@@ -12,6 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Data
 public class FavoritoId implements Serializable {
+
     Integer fk_usuario;
     Integer fk_restaurante;
 
