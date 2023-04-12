@@ -2,10 +2,7 @@ package meumenu.application.meumenu.controllers;
 
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.assossiativas.FavoritoRepository;
-import meumenu.application.meumenu.restaurante.DadosCadastroRestaurante;
-import meumenu.application.meumenu.restaurante.Restaurante;
-import meumenu.application.meumenu.restaurante.RestauranteDTO;
-import meumenu.application.meumenu.restaurante.RestauranteRepository;
+import meumenu.application.meumenu.restaurante.*;
 import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
@@ -130,30 +127,26 @@ public class RestauranteController {
         return ResponseEntity.status(200).body(usuarioDTO);
     }
 
-    @GetMapping("email")
+    @GetMapping("email/{id}")
     @Transactional
-    public ResponseEntity<String> enviarEmail(@RequestBody String titulo, String texto ) {
-        // Try block to check for exceptions
+        public ResponseEntity<String[]> enviarEmail(@RequestBody Email email, @PathVariable int id) {
+        String vetor [] = repositoryFavorito.findAllFavoritos(id);
         try {
 
-            // Creating a simple mail message
-            SimpleMailMessage mailMessage
-                    = new SimpleMailMessage();
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-            // Setting up necessary details
             mailMessage.setFrom("meumenu.contato@gmail.com");
-            mailMessage.setTo("brunonef4@gmail.com");
-            mailMessage.setText(texto);
-            mailMessage.setSubject(titulo);
+            mailMessage.setText(email.getTexto());
+            mailMessage.setSubject(email.getTitulo());
 
-            // Sending the mail
-            javaMailSender.send(mailMessage);
-            return ResponseEntity.status(200).body("email enviado com sucesso :)");
+            for (int i = 0; i < vetor.length; i++) {
+                mailMessage.setTo(vetor[i]);
+                javaMailSender.send(mailMessage);
+            }
+            return ResponseEntity.status(200).body(vetor);
         }
-
-        // Catch block to handle the exceptions
-        catch (Exception e) {
-            return ResponseEntity.status(400).body("email deu erro :(");
+        catch (Exception erro) {
+            return ResponseEntity.status(400).body(vetor);
         }
     }
 }
