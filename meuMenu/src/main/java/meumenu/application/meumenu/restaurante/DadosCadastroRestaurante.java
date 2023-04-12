@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import meumenu.application.meumenu.usuario.TipoComidaPreferida;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 public record DadosCadastroRestaurante (
         //validação atraves do "validation" metodo do spring
@@ -13,7 +14,7 @@ public record DadosCadastroRestaurante (
         @NotBlank
         String nome,
         @NotBlank
-        @Pattern(regexp = "\\d{14,16}")
+        @CNPJ
         String cnpj,
         @NotNull
         Especialidade especialidade,
