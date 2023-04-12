@@ -1,4 +1,5 @@
 package meumenu.application.meumenu.controllers;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.assossiativas.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.*;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+@Tag(name = "Documentação dos end-points de restaurantes",description = "Documentação viva dos restaurantes feita via swagger")
 @RestController
 @RequestMapping("/meumenu/restaurantes")
 public class RestauranteController {

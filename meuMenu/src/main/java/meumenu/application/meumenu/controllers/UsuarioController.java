@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.assossiativas.Favorito;
 import meumenu.application.meumenu.assossiativas.FavoritoId;
@@ -27,7 +28,7 @@ import meumenu.application.meumenu.usuario.UsuarioRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@Tag(name = "Documentação dos end-points de usuarios",description = "Documentação viva dos usuarios feita via swagger")
 @RestController
 @RequestMapping("/meumenu/usuarios")
 public class UsuarioController {

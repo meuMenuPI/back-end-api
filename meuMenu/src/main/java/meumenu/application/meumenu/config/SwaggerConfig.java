@@ -15,7 +15,7 @@ public class SwaggerConfig {
     public OpenAPI baseOpenAPI() {
 
         return new OpenAPI()
-                .info(new Info().title("Meu Menu doc").version("1.0.0").description("Meu Menu doc"));
+                .info(new Info().title("Meu menu documentação").version("1.0.0").description("Meu menu documentação viva da api"));
 
     }
 }
