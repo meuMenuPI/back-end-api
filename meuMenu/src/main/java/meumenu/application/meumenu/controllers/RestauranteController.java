@@ -11,6 +11,8 @@ import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,10 @@ public class RestauranteController {
 
     @Autowired
     private FavoritoRepository repositoryFavorito;
+
+    // biblioteca responsavel por mandar o email
+    @Autowired
+    private JavaMailSender emailSender;
 
     @PostMapping("/cadastrar")
     @Transactional
@@ -123,10 +129,21 @@ public class RestauranteController {
         return ResponseEntity.status(200).body(usuarioDTO);
     }
 
-    @GetMapping("email/{id}")
+    @GetMapping("email")
     @Transactional
-    public ResponseEntity<String[]> enviarEmail(@PathVariable int id ){
-        String vetor [] = repositoryFavorito.findAllFavoritos(id);
+    public ResponseEntity<String[]> enviarEmail(@RequestBody String titulo, String texto ){
+        // colocando na mão os emails só pra tentar fazer funcionar, obs: a senha do application.properties é uma gerada pelo google e ta certa
+        String vetor [] = repositoryFavorito.findAllFavoritos(1);
+        // "instanciando um email"
+        SimpleMailMessage message = new SimpleMailMessage();
+        // endereço de email de quem vai mandar
+        message.setFrom("meumenu.contato@gmail.com");
+        // quem vai receber
+        message.setTo("brunonef4@gmail.com");
+        message.setSubject(titulo);
+        message.setText(texto);
+        emailSender.send(message);
+
         return ResponseEntity.status(200).body(vetor);
 
     }
