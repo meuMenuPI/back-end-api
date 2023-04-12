@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import meumenu.application.meumenu.assossiativas.Favorito;
+import meumenu.application.meumenu.assossiativas.FavoritoId;
+import meumenu.application.meumenu.assossiativas.FavoritoRepository;
 import jdk.jfr.ContentType;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
@@ -28,10 +31,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/meumenu/usuarios")
 public class UsuarioController {
-@Autowired
+    @Autowired
     private UsuarioRepository repository;
-@Autowired
+    @Autowired
     private RestauranteRepository repositoryRestaurante;
+    @Autowired
+    private FavoritoRepository repositoryFavorito;
 
     @PostMapping("/cadastrar")
     @Operation(
@@ -227,4 +232,22 @@ public class UsuarioController {
             return ResponseEntity.status(200).body(restauranteDTO);
     }
 
+    @PostMapping("/favoritar")
+    @Transactional
+    public ResponseEntity<List<Favorito>> favoritar(@RequestBody @Valid Favorito dados) {
+        repositoryFavorito.save(new Favorito(dados.getFk_usuario(), dados.getFk_restaurante()));
+        List<Favorito> l = repositoryFavorito.findAll();
+        return ResponseEntity.status(200).body(l);
+    }
+
+    @DeleteMapping("/favoritar")
+    @Transactional
+    public ResponseEntity<Void> desfavoritar(@RequestBody @Valid Favorito dados) {
+        FavoritoId favorito = new FavoritoId(dados.getFk_usuario(), dados.getFk_restaurante());
+        if(repositoryFavorito.existsById(favorito)){
+            repositoryFavorito.deleteById(favorito);
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(404).build();
+    }
 }

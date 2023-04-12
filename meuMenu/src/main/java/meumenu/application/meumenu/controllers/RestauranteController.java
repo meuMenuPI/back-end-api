@@ -1,31 +1,41 @@
 package meumenu.application.meumenu.controllers;
-
 import jakarta.validation.Valid;
-import meumenu.application.meumenu.restaurante.DadosCadastroRestaurante;
-import meumenu.application.meumenu.restaurante.Restaurante;
-import meumenu.application.meumenu.restaurante.RestauranteDTO;
-import meumenu.application.meumenu.restaurante.RestauranteRepository;
+import meumenu.application.meumenu.assossiativas.FavoritoRepository;
+import meumenu.application.meumenu.restaurante.*;
 import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
+
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 @RequestMapping("/meumenu/restaurantes")
 public class RestauranteController {
-
     @Autowired
     private RestauranteRepository repository;
 
     @Autowired
     private UsuarioRepository repositoryUsuario;
 
+    @Autowired
+    private FavoritoRepository repositoryFavorito;
+
+    // biblioteca responsavel por mandar o email
+    @Autowired private JavaMailSender javaMailSender;
 
     @PostMapping("/cadastrar")
     @Transactional
@@ -117,6 +127,28 @@ public class RestauranteController {
         return ResponseEntity.status(200).body(usuarioDTO);
     }
 
+    @GetMapping("email/{id}")
+    @Transactional
+        public ResponseEntity<String[]> enviarEmail(@RequestBody Email email, @PathVariable int id) {
+        String vetor [] = repositoryFavorito.findAllFavoritos(id);
+        try {
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+            mailMessage.setFrom("meumenu.contato@gmail.com");
+            mailMessage.setText(email.getTexto());
+            mailMessage.setSubject(email.getTitulo());
+
+            for (int i = 0; i < vetor.length; i++) {
+                mailMessage.setTo(vetor[i]);
+                javaMailSender.send(mailMessage);
+            }
+            return ResponseEntity.status(200).body(vetor);
+        }
+        catch (Exception erro) {
+            return ResponseEntity.status(400).body(vetor);
+        }
     }
+}
 
 
