@@ -11,6 +11,8 @@ import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +38,7 @@ public class RestauranteController {
     private FavoritoRepository repositoryFavorito;
 
     // biblioteca responsavel por mandar o email
-    @Autowired
-    private JavaMailSender emailSender;
+    @Autowired private JavaMailSender javaMailSender;
 
     @PostMapping("/cadastrar")
     @Transactional
@@ -131,21 +132,29 @@ public class RestauranteController {
 
     @GetMapping("email")
     @Transactional
-    public ResponseEntity<String[]> enviarEmail(@RequestBody String titulo, String texto ){
-        // colocando na mão os emails só pra tentar fazer funcionar, obs: a senha do application.properties é uma gerada pelo google e ta certa
-        String vetor [] = repositoryFavorito.findAllFavoritos(1);
-        // "instanciando um email"
-        SimpleMailMessage message = new SimpleMailMessage();
-        // endereço de email de quem vai mandar
-        message.setFrom("meumenu.contato@gmail.com");
-        // quem vai receber
-        message.setTo("brunonef4@gmail.com");
-        message.setSubject(titulo);
-        message.setText(texto);
-        emailSender.send(message);
+    public ResponseEntity<String> enviarEmail(@RequestBody String titulo, String texto ) {
+        // Try block to check for exceptions
+        try {
 
-        return ResponseEntity.status(200).body(vetor);
+            // Creating a simple mail message
+            SimpleMailMessage mailMessage
+                    = new SimpleMailMessage();
 
+            // Setting up necessary details
+            mailMessage.setFrom("meumenu.contato@gmail.com");
+            mailMessage.setTo("brunonef4@gmail.com");
+            mailMessage.setText(texto);
+            mailMessage.setSubject(titulo);
+
+            // Sending the mail
+            javaMailSender.send(mailMessage);
+            return ResponseEntity.status(200).body("email enviado com sucesso :)");
+        }
+
+        // Catch block to handle the exceptions
+        catch (Exception e) {
+            return ResponseEntity.status(400).body("email deu erro :(");
+        }
     }
 }
 
