@@ -1,4 +1,9 @@
 package meumenu.application.meumenu.controllers;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.assossiativas.FavoritoRepository;
@@ -23,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-@Tag(name = "Documentação dos end-points de restaurantes",description = "Documentação viva dos restaurantes feita via swagger")
+@Tag(name = "Documentação dos end-points de restaurantes", description = "Documentação viva dos restaurantes feita via swagger")
 @RestController
 @RequestMapping("/meumenu/restaurantes")
 public class RestauranteController {
@@ -37,35 +42,39 @@ public class RestauranteController {
     private FavoritoRepository repositoryFavorito;
 
     // biblioteca responsavel por mandar o email
-    @Autowired private JavaMailSender javaMailSender;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @PostMapping("/cadastrar")
+    @Operation(summary = "Metodo de cadastrar restaurante", description = "Cadastra restaurante", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
-    public ResponseEntity <RestauranteDTO> cadastrar(@RequestBody @Valid DadosCadastroRestaurante dados){
+    public ResponseEntity<RestauranteDTO> cadastrar(@RequestBody @Valid DadosCadastroRestaurante dados) {
         repository.save(new Restaurante(dados));
         List<Restaurante> tempRestaurante = repository.findAll();
-        RestauranteDTO restaurante = new RestauranteDTO(tempRestaurante.get(tempRestaurante.size()-1).getId(), dados.nome(), dados.especialidade().name(), dados.telefone(), dados.site() ,dados.estrela());
+        RestauranteDTO restaurante = new RestauranteDTO(tempRestaurante.get(tempRestaurante.size() - 1).getId(), dados.nome(), dados.especialidade().name(), dados.telefone(), dados.site(), dados.estrela());
         return ResponseEntity.status(200).body(restaurante);
     }
 
     @GetMapping
+    @Operation(summary = "Metodo de listar todos os restaurantes", description = "Lista todos restaurantes", responses = {@ApiResponse(responseCode = "200", description = "Sucesso lista retornada!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso lista retornada!\"}"),})), @ApiResponse(responseCode = "204", description = "Sucesso lista retornada mas vazia!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 204', \"Status\" : \"Ok!\", \"Message\" :\"Sucesso lista retornada mas vazia!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
-    public ResponseEntity<List<RestauranteDTO>>  listar(){
+    public ResponseEntity<List<RestauranteDTO>> listar() {
         List<RestauranteDTO> restauranteDTO = new ArrayList<>();
         List<Restaurante> tempRestaurante = repository.findAll();
-        for(Restaurante r : tempRestaurante){
-            restauranteDTO.add(new RestauranteDTO(r.getId(),r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela()));
+        for (Restaurante r : tempRestaurante) {
+            restauranteDTO.add(new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela()));
         }
         return ResponseEntity.status(200).body(restauranteDTO);
     }
 
     @GetMapping("{id}")
+    @Operation(summary = "Metodo de listar restaurante por id", description = "Lista restaurante por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante listado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante listado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
-    public ResponseEntity<RestauranteDTO> listarPorId(@PathVariable Integer id){
+    public ResponseEntity<RestauranteDTO> listarPorId(@PathVariable Integer id) {
         List<Restaurante> tempRestaurante = repository.findAll();
-        for(Restaurante r : tempRestaurante){
-            if(r.getId().equals(id)){
-                RestauranteDTO restaurante = new RestauranteDTO(r.getId(),r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela());
+        for (Restaurante r : tempRestaurante) {
+            if (r.getId().equals(id)) {
+                RestauranteDTO restaurante = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela());
                 return ResponseEntity.status(200).body(restaurante);
             }
         }
@@ -73,20 +82,21 @@ public class RestauranteController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Metodo de atualizar dados do restaurante", description = "Atualiza restaurante por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante atualizado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante atualizado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
-    public  ResponseEntity<String> atualizar (@RequestBody @Valid Restaurante dados, @PathVariable int id){
-        if(repository.existsById(id)){
+    public ResponseEntity<String> atualizar(@RequestBody @Valid Restaurante dados, @PathVariable int id) {
+        if (repository.existsById(id)) {
             Restaurante restaurante = repository.findById(id).orElseThrow();
-            if(dados.getNome() != null){
+            if (dados.getNome() != null) {
                 restaurante.setNome(dados.getNome());
             }
-            if(dados.getSite()!= null){
+            if (dados.getSite() != null) {
                 restaurante.setSite(dados.getSite());
             }
-            if(dados.getTelefone()!= null){
+            if (dados.getTelefone() != null) {
                 restaurante.setTelefone(dados.getTelefone());
             }
-            if(dados.getEstrela() != null){
+            if (dados.getEstrela() != null) {
                 restaurante.setEstrela(dados.getEstrela());
             }
             repository.save(restaurante);
@@ -96,9 +106,10 @@ public class RestauranteController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Metodo de deletar restaurante por id", description = "Deleta restaurante por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante deletado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante deletado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
-    public  ResponseEntity<String> deletar (@PathVariable int id){
-        if(repository.existsById(id)){
+    public ResponseEntity<String> deletar(@PathVariable int id) {
+        if (repository.existsById(id)) {
             Restaurante restaurante = repository.findById(id).orElseThrow();
             repository.delete(restaurante);
             return ResponseEntity.status(200).body("Restaurante deletado com sucesso");
@@ -108,31 +119,32 @@ public class RestauranteController {
 
     @GetMapping("/recomendar/{id}")
     @Transactional
-    public ResponseEntity<List<UsuarioDTO>> recomendar(@PathVariable int id){
+    public ResponseEntity<List<UsuarioDTO>> recomendar(@PathVariable int id) {
 
         List<Restaurante> listaRestaurante = repository.findAll();
         List<Usuario> listaUsuario = repositoryUsuario.findAll();
         List<UsuarioDTO> usuarioDTO = new ArrayList<>();
 
-        if(!repository.existsById(id)){
+        if (!repository.existsById(id)) {
             return ResponseEntity.status(404).build();
         }
 
-        for(Restaurante r : listaRestaurante){
-            if(r.getId() == id){
+        for (Restaurante r : listaRestaurante) {
+            if (r.getId() == id) {
                 usuarioDTO = (r.recomendar(listaUsuario, listaRestaurante, id));
             }
         }
-        if(usuarioDTO.isEmpty()){
+        if (usuarioDTO.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
         return ResponseEntity.status(200).body(usuarioDTO);
     }
 
     @PostMapping("email/{id}")
+    @Operation(summary = "Metodo de enviar email para usuarios", description = "Envia email para usuarios", responses = {@ApiResponse(responseCode = "200", description = "Sucesso email enviado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso email enviado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
-        public ResponseEntity<String[]> enviarEmail(@RequestBody Email email, @PathVariable int id) {
-        String vetor [] = repositoryFavorito.findAllFavoritos(id);
+    public ResponseEntity<String[]> enviarEmail(@RequestBody Email email, @PathVariable int id) {
+        String vetor[] = repositoryFavorito.findAllFavoritos(id);
         try {
 
             SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -146,8 +158,7 @@ public class RestauranteController {
                 javaMailSender.send(mailMessage);
             }
             return ResponseEntity.status(200).body(vetor);
-        }
-        catch (Exception erro) {
+        } catch (Exception erro) {
             return ResponseEntity.status(400).body(vetor);
         }
     }
