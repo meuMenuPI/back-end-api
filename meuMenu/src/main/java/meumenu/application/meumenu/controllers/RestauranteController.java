@@ -127,7 +127,7 @@ public class RestauranteController {
         return ResponseEntity.status(200).body(usuarioDTO);
     }
 
-    @GetMapping("email/{id}")
+    @PostMapping("email/{id}")
     @Transactional
         public ResponseEntity<String[]> enviarEmail(@RequestBody Email email, @PathVariable int id) {
         String vetor [] = repositoryFavorito.findAllFavoritos(id);
