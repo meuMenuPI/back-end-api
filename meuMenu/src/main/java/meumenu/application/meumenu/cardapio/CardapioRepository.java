@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface CardapioRepository extends JpaRepository<Cardapio, Integer> {
     @Query(value = "select * from cardapio  where fk_restaurante = ?1", nativeQuery = true)
-    List<Cardapio> findByRestaurante (Integer fk_restaurante);
+    List<Cardapio> findByRestauranteLista (Integer fk_restaurante);
+
+    @Query(value = "select * from cardapio  where fk_restaurante = ?1", nativeQuery = true)
+    Cardapio[] findByRestauranteVetor (Integer fk_restaurante);
 }

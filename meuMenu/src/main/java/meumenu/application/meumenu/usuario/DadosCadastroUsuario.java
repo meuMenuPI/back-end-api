@@ -15,7 +15,9 @@ public record DadosCadastroUsuario(
         @NotBlank
         String sobrenome,
         @NotBlank
-        @CPF
+        @Pattern(
+                regexp = "([0-9]{3}[.]?[0-9]{3}[.]?[0-9]{3}-[0-9]{2})|([0-9]{11})"
+        )
         String cpf,
         @NotBlank
         @Email

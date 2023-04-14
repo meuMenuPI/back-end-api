@@ -1,0 +1,1 @@
+alter table cardapio rename column estiloGastronomico TO estilo_gastronomico;
