@@ -1,4 +1,4 @@
-package meumenu.application.meumenu.restaurante;
+package meumenu.application.meumenu.enums;
 
 public enum Especialidade {
         MEXICANA,

@@ -2,6 +2,7 @@ package meumenu.application.meumenu.usuario;
 
 import jakarta.persistence.*;
 import lombok.*;
+import meumenu.application.meumenu.enums.Especialidade;
 import meumenu.application.meumenu.interfaces.Recomendavel;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
@@ -26,7 +27,7 @@ public class  Usuario implements Recomendavel {
     private String email;
     private String senha;
     @Enumerated(EnumType.STRING)
-    private TipoComidaPreferida tipoComidaPreferida;
+    private Especialidade tipoComidaPreferida;
 
 
     public Usuario(DadosCadastroUsuario dados) {
