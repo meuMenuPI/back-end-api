@@ -25,9 +25,9 @@ import meumenu.application.meumenu.usuario.DadosCadastroUsuario;
 import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 @Tag(name = "Documentação dos end-points de usuarios", description = "Documentação viva dos usuarios feita via swagger")
 @RestController
@@ -160,4 +160,65 @@ public class UsuarioController {
         }
         return ResponseEntity.status(404).build();
     }
+
+    //GRAVAR ARQUIVO CSV ---------------
+    @GetMapping("/download/{id}")
+    public ResponseEntity<String> gravaArquivoCsv(@PathVariable int id){
+        FileWriter arq = null;
+        Formatter saida = null;
+        Boolean deuRuim = false;
+
+        List<UsuarioDTO> usuariosDTO = new ArrayList<>();
+        List<Usuario> tempUsuario = repository.findAll();
+        Optional<Restaurante> idRestaurante = repositoryRestaurante.findById(id);
+        for(int i = 0 ; i < tempUsuario.size(); i++){
+            if(tempUsuario.get(i).getTipoComidaPreferida().toString().equals(idRestaurante.get().getEspecialidade().toString())){
+                usuariosDTO.add(new UsuarioDTO(tempUsuario.get(i).getId(),tempUsuario.get(i).getNome(), tempUsuario.get(i).getSobrenome(), tempUsuario.get(i).getEmail(), tempUsuario.get(i).getTipoComidaPreferida().name()));
+            }
+        }
+
+        String nomeArq;
+        String typeHardware = (String) System.getProperties().get("os.name");
+        if(typeHardware.startsWith("Windows")){
+            nomeArq = System.getProperty("user.home") + "/Downloads/Usuarios_Gerais.csv";
+        }else{
+            nomeArq =System.getProperty("java.io.tmpdir") + "/Downloads/Usuarios_Gerais.csv";
+        }
+
+        //Bloco try-catch para abri o arquivo
+        try{
+            arq = new FileWriter(nomeArq);
+            saida = new Formatter(arq);
+
+        }catch (IOException e){
+            System.out.println("Erro ao abrir o arquivo");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        //Blobo try-catch para gravar o arquivo
+        try{
+            saida.format("%-4s;%-8s;%-12s;%-10s;%20s\n","ID", "NOME", "SOBRENOME", "EMAIL", "TIPO COMIDA FAVORITA");
+            for(int i = 0 ; i < usuariosDTO.size(); i++){
+                UsuarioDTO dog = usuariosDTO.get(i);
+                saida.format("%4d;%-8s;%-12s;%-10s;%-20s\n",usuariosDTO.get(i).getId(),usuariosDTO.get(i).getNome(), usuariosDTO.get(i).getSobrenome(), usuariosDTO.get(i).getEmail(), usuariosDTO.get(i).getTipoComidaFavorita());
+            }
+        }catch (FormatterClosedException e){
+            System.out.println("Erro na formatação do arquivo");
+            deuRuim = true;
+        }
+        finally {
+            saida.close();
+            try{
+                arq.close();
+                return ResponseEntity.status(200).body("Download feito com sucesso");
+            }catch (IOException e){
+                System.out.println("Erro ao fechar o arquivo");
+                deuRuim = true;
+                System.exit(1);
+                return ResponseEntity.status(500).build();
+            }
+        }
+    }
+
 }
