@@ -177,13 +177,7 @@ public class UsuarioController {
             }
         }
 
-        String nomeArq;
-        String typeHardware = (String) System.getProperties().get("os.name");
-        if(typeHardware.startsWith("Windows")){
-            nomeArq = System.getProperty("user.home") + "/Downloads/Usuarios_Gerais.csv";
-        }else{
-            nomeArq =System.getProperty("java.io.tmpdir") + "/Downloads/Usuarios_Gerais.csv";
-        }
+        String nomeArq =System.getProperty("user.home") + "/Downloads/Usuarios_Gerais.csv";
 
         //Bloco try-catch para abri o arquivo
         try{
