@@ -26,6 +26,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 @Tag(name = "Documentação dos end-points de restaurantes", description = "Documentação viva dos restaurantes feita via swagger")
@@ -71,12 +72,10 @@ public class RestauranteController {
     @Operation(summary = "Metodo de listar restaurante por id", description = "Lista restaurante por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante listado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante listado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     public ResponseEntity<RestauranteDTO> listarPorId(@PathVariable Integer id) {
-        List<Restaurante> tempRestaurante = repository.findAll();
-        for (Restaurante r : tempRestaurante) {
-            if (r.getId().equals(id)) {
-                RestauranteDTO restaurante = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela());
-                return ResponseEntity.status(200).body(restaurante);
-            }
+        Optional<Restaurante> r = repository.findById(id);
+        if(r.isPresent()){
+            RestauranteDTO restaurante = new RestauranteDTO(r.get().getId(),r.get().getNome(), r.get().getEspecialidade().name(), r.get().getTelefone(), r.get().getSite(), r.get().getEstrela());
+            return ResponseEntity.status(200).body(restaurante);
         }
         return ResponseEntity.status(404).build();
     }
@@ -110,8 +109,7 @@ public class RestauranteController {
     @Transactional
     public ResponseEntity<String> deletar(@PathVariable int id) {
         if (repository.existsById(id)) {
-            Restaurante restaurante = repository.findById(id).orElseThrow();
-            repository.delete(restaurante);
+            repository.deleteById(id);
             return ResponseEntity.status(200).body("Restaurante deletado com sucesso");
         }
         return ResponseEntity.status(404).body("Restaurante não encontrado");
