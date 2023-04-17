@@ -177,7 +177,7 @@ public class UsuarioController {
             }
         }
 
-        String nomeArq =System.getProperty("user.home") + "/Downloads/Usuarios_Gerais.csv";
+        String nomeArq = System.getProperty("user.home") + "/Downloads/Usuarios_Gerais.csv";
 
         //Bloco try-catch para abri o arquivo
         try{
