@@ -2,6 +2,7 @@ package meumenu.application.meumenu.restaurante;
 
 import jakarta.persistence.*;
 import lombok.*;
+import meumenu.application.meumenu.enums.Especialidade;
 import meumenu.application.meumenu.interfaces.Recomendavel;
 import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
