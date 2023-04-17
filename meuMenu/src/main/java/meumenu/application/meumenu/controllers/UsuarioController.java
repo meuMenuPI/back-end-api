@@ -66,12 +66,11 @@ public class UsuarioController {
     @Operation(summary = "Metodo de listar usuario por id", description = "Listar o usuario meu menu especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso listou o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso listou o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     public ResponseEntity<UsuarioDTO> listarPorId(@PathVariable Integer id) {
-        List<Usuario> tempUsuario = repository.findAll();
-        for (Usuario u : tempUsuario) {
-            if (u.getId().equals(id)) {
-                UsuarioDTO usuario = new UsuarioDTO(u.getId(), u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name());
-                return ResponseEntity.status(200).body(usuario);
-            }
+        Optional<Usuario> u = repository.findById(id);
+
+        if (u.isPresent()) {
+            UsuarioDTO usuario = new UsuarioDTO(u.get().getId(), u.get().getNome(), u.get().getSobrenome(), u.get().getEmail(), u.get().getTipoComidaPreferida().name());
+            return ResponseEntity.status(200).body(usuario);
         }
         return ResponseEntity.status(404).build();
     }
@@ -94,12 +93,10 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity<String> logar(@RequestBody Usuario dados) {
 
-        List<Usuario> listaUsuario = repository.findAll();
+        Optional<Usuario> b = repository.findByEmail(dados.getEmail());
 
-        for (Usuario b : listaUsuario) {
-            if (b.getEmail().equals(dados.getEmail()) && b.getSenha().equals(dados.getSenha())) {
-                return ResponseEntity.status(200).body("Login efetuado com sucesso");
-            }
+        if (b.get().getEmail().equals(dados.getEmail()) && b.get().getSenha().equals(dados.getSenha())) {
+            return ResponseEntity.status(200).body("Login efetuado com sucesso");
         }
         return ResponseEntity.status(401).body("Email e senha incorretos");
     }
@@ -109,8 +106,7 @@ public class UsuarioController {
     @Transactional
     public ResponseEntity<String> deletar(@PathVariable int id) {
         if (repository.existsById(id)) {
-            Usuario usuario = repository.findById(id).orElseThrow();
-            repository.delete(usuario);
+            repository.deleteById(id);
             return ResponseEntity.status(200).body("Usuário deletado com sucesso");
         }
         return ResponseEntity.status(404).body("Usuário não encontrado");
