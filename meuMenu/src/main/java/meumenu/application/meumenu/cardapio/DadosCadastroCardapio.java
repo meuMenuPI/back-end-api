@@ -12,6 +12,8 @@ public record DadosCadastroCardapio(
         Integer fk_restaurante,
         @NotBlank
         String nome,
+        @NotBlank
+        String descricao,
         @NotNull
         Double preco,
         @NotNull

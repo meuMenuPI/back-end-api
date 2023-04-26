@@ -30,7 +30,7 @@ public class CardapioController {
     public ResponseEntity<Cardapio> cadastrar(@RequestBody @Valid DadosCadastroCardapio dados){
         cardapioRepository.save(new Cardapio(dados));
         List<Cardapio> cardapios = cardapioRepository.findAll();
-        Cardapio cardapio = new Cardapio(cardapios.get(cardapios.size()-1).getId(),dados.fk_restaurante() ,dados.nome(), dados.preco(), dados.estiloGastronomico());
+        Cardapio cardapio = new Cardapio(cardapios.get(cardapios.size()-1).getId(),dados.fk_restaurante() ,dados.nome(), dados.descricao(), dados.preco(), dados.estiloGastronomico());
         return ResponseEntity.status(200).body(cardapio);
     }
 

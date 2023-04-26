@@ -22,6 +22,7 @@ public class Cardapio {
     private Integer id;
     private Integer fk_restaurante;
     private String nome;
+    private String descricao;
     private Double preco;
     @Enumerated(EnumType.STRING)
     private Especialidade estiloGastronomico;

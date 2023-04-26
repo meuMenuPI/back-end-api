@@ -1,0 +1,1 @@
+alter table cardapio add column descricao varchar(100);
