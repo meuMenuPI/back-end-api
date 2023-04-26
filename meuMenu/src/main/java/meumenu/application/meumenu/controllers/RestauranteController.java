@@ -24,10 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 @Tag(name = "Documentação dos end-points de restaurantes", description = "Documentação viva dos restaurantes feita via swagger")
 @RestController
@@ -158,6 +157,60 @@ public class RestauranteController {
             return ResponseEntity.status(200).body(vetor);
         } catch (Exception erro) {
             return ResponseEntity.status(400).body(vetor);
+        }
+    }
+
+    //GRAVAR ARQUIVO CSV ---------------
+    @GetMapping("/download/{id}")
+    @Operation(summary = "Metodo de baixar os dados dos usuarios correspondentes", description = "Download csv dos dados dos usuarios que tem o tipo de comida favorita igual ao restaurante", responses = {@ApiResponse(responseCode = "200", description = "Sucesso email enviado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso email enviado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    public ResponseEntity<String> gravaArquivoCsv(@PathVariable int id) {
+        FileWriter arq = null;
+        Formatter saida = null;
+        Boolean deuRuim = false;
+
+        List<UsuarioDTO> usuariosDTO = new ArrayList<>();
+        List<Usuario> tempUsuario = repositoryUsuario.findAll();
+        Optional<Restaurante> idRestaurante = repository.findById(id);
+        for (int i = 0; i < tempUsuario.size(); i++) {
+            if (tempUsuario.get(i).getTipoComidaPreferida().toString().equals(idRestaurante.get().getEspecialidade().toString())) {
+                usuariosDTO.add(new UsuarioDTO(tempUsuario.get(i).getId(), tempUsuario.get(i).getNome(), tempUsuario.get(i).getSobrenome(), tempUsuario.get(i).getEmail(), tempUsuario.get(i).getTipoComidaPreferida().name()));
+            }
+        }
+
+        String nomeArq = System.getProperty("user.home") + "/Downloads/Usuarios_Gerais.csv";
+
+        //Bloco try-catch para abri o arquivo
+        try {
+            arq = new FileWriter(nomeArq);
+            saida = new Formatter(arq);
+
+        } catch (IOException e) {
+            System.out.println("Erro ao abrir o arquivo");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        //Blobo try-catch para gravar o arquivo
+        try {
+            saida.format("%-4s;%-8s;%-12s;%-10s;%20s\n", "ID", "NOME", "SOBRENOME", "EMAIL", "TIPO COMIDA FAVORITA");
+            for (int i = 0; i < usuariosDTO.size(); i++) {
+                UsuarioDTO dog = usuariosDTO.get(i);
+                saida.format("%4d;%-8s;%-12s;%-10s;%-20s\n", usuariosDTO.get(i).getId(), usuariosDTO.get(i).getNome(), usuariosDTO.get(i).getSobrenome(), usuariosDTO.get(i).getEmail(), usuariosDTO.get(i).getTipoComidaFavorita());
+            }
+        } catch (FormatterClosedException e) {
+            System.out.println("Erro na formatação do arquivo");
+            deuRuim = true;
+        } finally {
+            saida.close();
+            try {
+                arq.close();
+                return ResponseEntity.status(200).body("Download feito com sucesso");
+            } catch (IOException e) {
+                System.out.println("Erro ao fechar o arquivo");
+                deuRuim = true;
+                System.exit(1);
+                return ResponseEntity.status(500).build();
+            }
         }
     }
 }
