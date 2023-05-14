@@ -16,5 +16,11 @@ public class RestauranteDTO {
     private String site;
     private Integer estrela;
 
-
+    public RestauranteDTO(String nome, String especialidade, String telefone, String site, Integer estrela) {
+        this.nome = nome;
+        this.especialidade = especialidade;
+        this.telefone = telefone;
+        this.site = site;
+        this.estrela = estrela;
+    }
 }
