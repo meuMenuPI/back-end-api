@@ -16,14 +16,11 @@ import jdk.jfr.ContentType;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
 import meumenu.application.meumenu.restaurante.RestauranteRepository;
-import meumenu.application.meumenu.usuario.UsuarioDTO;
+import meumenu.application.meumenu.usuario.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import meumenu.application.meumenu.usuario.DadosCadastroUsuario;
-import meumenu.application.meumenu.usuario.Usuario;
-import meumenu.application.meumenu.usuario.UsuarioRepository;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -93,17 +90,17 @@ public class UsuarioController {
     }
 
     @PostMapping("/logar")
-    @Operation(summary = "Metodo de logar", description = "Atualizar o usuario meu menu especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso atualizou o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso atualizou o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Operation(summary = "Metodo de logar", description = "logar o usuario na aplicação", responses = {
+            @ApiResponse(responseCode = "200", description = "Sucesso, usuário logado!", content = @Content(mediaType = "application/json",
+                            examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso, usuário logado!\"}"),})),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado!", content = @Content(mediaType = "application/json",
+                    examples = {@ExampleObject(value = "{\"code\" : 404, \"Status\" : \"Erro!\", \"Message\" :\"Usuário não encontrado!\"}"),})),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json",
+                    examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<String> logar(@RequestBody Usuario dados) {
-
-        Optional<Usuario> b = repository.findByEmail(dados.getEmail());
-
-        if (b.get().getEmail().equals(dados.getEmail()) && b.get().getSenha().equals(dados.getSenha())) {
-            return ResponseEntity.status(200).body("Login efetuado com sucesso");
-        }
-        return ResponseEntity.status(401).body("Email e senha incorretos");
+    public ResponseEntity<Usuario> logar(@RequestBody UsuarioDtoLogar dados) {
+        return ResponseEntity.of(repository.findByEmailAndSenha(dados.getEmail(),dados.getSenha()));
     }
 
     @DeleteMapping("/{id}")
