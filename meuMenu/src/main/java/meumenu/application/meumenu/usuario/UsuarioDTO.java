@@ -12,6 +12,6 @@ public class UsuarioDTO {
     private String nome;
     private String sobrenome;
     private String email;
-    private String tipoComidaFavorita;
+    private String tipoComidaPreferida;
 }
 

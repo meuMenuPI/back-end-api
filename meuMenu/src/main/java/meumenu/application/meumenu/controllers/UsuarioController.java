@@ -99,8 +99,15 @@ public class UsuarioController {
                     examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<Usuario> logar(@RequestBody UsuarioDtoLogar dados) {
-        return ResponseEntity.of(repository.findByEmailAndSenha(dados.getEmail(),dados.getSenha()));
+    public ResponseEntity<UsuarioDTO> logar(@RequestBody UsuarioDtoLogar dados) {
+
+        Optional<Usuario> b = repository.findByEmailAndSenha(dados.getEmail(),dados.getSenha());
+
+        if(b == null){
+            return ResponseEntity.status(404).build();
+        }
+
+        return ResponseEntity.status(200).body(new UsuarioDTO(b.get().getId(), b.get().getNome(), b.get().getSobrenome(), b.get().getEmail(), b.get().getTipoComidaPreferida().name()));
     }
 
     @DeleteMapping("/{id}")
