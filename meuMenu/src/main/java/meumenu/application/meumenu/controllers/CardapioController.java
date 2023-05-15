@@ -27,6 +27,7 @@ public class CardapioController {
     @PostMapping
     @Operation(summary = "Metodo de cadastrar prato", description = "Create Prato MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso prato criado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso prato criado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<Cardapio> cadastrar(@RequestBody @Valid DadosCadastroCardapio dados){
         cardapioRepository.save(new Cardapio(dados));
         List<Cardapio> cardapios = cardapioRepository.findAll();
@@ -37,6 +38,7 @@ public class CardapioController {
     @GetMapping
     @Operation(summary = "Metodo de listar todos os pratos do restaurante", description = "List cardapio", responses = {@ApiResponse(responseCode = "200", description = "Sucesso lista retornada!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso lista retornada!\"}"),})), @ApiResponse(responseCode = "204", description = "Sucesso lista retornada mas vazia!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 204', \"Status\" : \"Ok!\", \"Message\" :\"Sucesso lista retornada mas vazia!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<List<Cardapio>> listar(@RequestParam Integer id){
         List<Cardapio> cardapios = cardapioRepository.findByRestauranteLista(id);
         if(cardapios.isEmpty()){
@@ -48,6 +50,7 @@ public class CardapioController {
     @PutMapping()
     @Operation(summary = "Metodo de atualizar dados do prato", description = "Atualiza prato por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso prato atualizado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso prato atualizado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<Cardapio> atualizar(@RequestBody @Valid Cardapio dados) {
         if (cardapioRepository.existsById(dados.getId())) {
             Cardapio cardapio = cardapioRepository.findById(dados.getId()).orElseThrow();
@@ -84,6 +87,7 @@ public class CardapioController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Metodo de deletar prato por id", description = "Deletar o prato do restaurante especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso deletou o prato!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso deletou o prato!\"}"),})), @ApiResponse(responseCode = "404", description = "Prato não encontrado", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 404, \"Status\" : \"Erro\", \"Message\" :\"Prato não encontrado\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<String> deletar(@PathVariable int id) {
         if (cardapioRepository.existsById(id)) {
             Cardapio cardapio = cardapioRepository.findById(id).orElseThrow();
@@ -96,6 +100,7 @@ public class CardapioController {
     @GetMapping("/ordernar/preco-crescente")
     @Operation(summary = "Metodo de ordenar prato preço crescente", description = "Ordenar pratos do restaurante por preço crescente", responses = {@ApiResponse(responseCode = "200", description = "Sucesso deletou o prato!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso!\"}"),})), @ApiResponse(responseCode = "204", description = "Nenhum prato cadastrado no seu restaurante!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 204, \"Status\" : \"Erro\", \"Message\" :\"Nenhum prato cadastrado no seu restaurante!\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<Cardapio[]> ordenarPrecoCrescente(@RequestParam Integer id){
         Cardapio[] cardapio = cardapioRepository.findByRestauranteVetor(id);
         if(cardapio.length == 0){
@@ -120,6 +125,7 @@ public class CardapioController {
     @GetMapping("/ordernar/preco-decrescente")
     @Operation(summary = "Metodo de ordenar prato preço decrescente", description = "Ordenar pratos do restaurante por preço decrescente", responses = {@ApiResponse(responseCode = "200", description = "Sucesso deletou o prato!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso!\"}"),})), @ApiResponse(responseCode = "204", description = "Nenhum prato cadastrado no seu restaurante!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 204, \"Status\" : \"Erro\", \"Message\" :\"Nenhum prato cadastrado no seu restaurante!\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<Cardapio[]> ordenarPrecoDecrescente(@RequestParam Integer id){
         Cardapio[] cardapio = cardapioRepository.findByRestauranteVetor(id);
         if(cardapio.length == 0){

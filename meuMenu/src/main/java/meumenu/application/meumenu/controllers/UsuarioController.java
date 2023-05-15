@@ -43,6 +43,7 @@ public class UsuarioController {
     @PostMapping("/cadastrar")
     @Operation(summary = "Metodo de cadastrar usuario", description = "Create User MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso usuario meu menu criado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso usuario meu menu criado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
         repository.save(new Usuario(dados));
         List<Usuario> tempUsuario = repository.findAll();
@@ -53,6 +54,7 @@ public class UsuarioController {
     @GetMapping
     @Operation(summary = "Metodo de listar todos os usuarios", description = "List Users MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso lista retornada!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso lista retornada!\"}"),})), @ApiResponse(responseCode = "204", description = "Sucesso lista retornada mas vazia!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 204', \"Status\" : \"Ok!\", \"Message\" :\"Sucesso lista retornada mas vazia!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<List<UsuarioDTO>> listar() {
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
         List<Usuario> tempUsuario = repository.findAll();
@@ -65,6 +67,7 @@ public class UsuarioController {
     @GetMapping("{id}")
     @Operation(summary = "Metodo de listar usuario por id", description = "Listar o usuario meu menu especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso listou o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso listou o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<UsuarioDTO> listarPorId(@PathVariable Integer id) {
         Optional<Usuario> u = repository.findById(id);
 
@@ -78,6 +81,7 @@ public class UsuarioController {
     @PutMapping("/{id}")
     @Operation(summary = "Metodo de atualizar dados do usuario", description = "Atualizar o usuario meu menu especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso atualizou o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso atualizou o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<String> atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id) {
         if (repository.existsById(id)) {
             Usuario usuario = repository.findById(id).orElseThrow();
@@ -91,6 +95,7 @@ public class UsuarioController {
     @PostMapping("/logar")
     @Operation(summary = "Metodo de logar", description = "Atualizar o usuario meu menu especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso atualizou o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso atualizou o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<String> logar(@RequestBody Usuario dados) {
 
         Optional<Usuario> b = repository.findByEmail(dados.getEmail());
@@ -104,6 +109,7 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Metodo de deletar usuario por id", description = "Deletar o usuario MeuMenu especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso deletou o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso deletou o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<String> deletar(@PathVariable int id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
@@ -115,6 +121,7 @@ public class UsuarioController {
     @GetMapping("/recomendar/{id}")
     @Operation(summary = "Metodo de recomendar restaurantes por tipo de comida preferida do usuario", description = "Recomenda restaurante para o usuario MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante recomendando para o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante recomendando para o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<List<RestauranteDTO>> recomendar(@PathVariable int id) {
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
         List<Usuario> listaUsuario = repository.findAll();
@@ -139,6 +146,7 @@ public class UsuarioController {
     @PostMapping("/favoritar")
     @Operation(summary = "Metodo de favoritar restaurantes", description = "Favorita restaurante para o usuario MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante favoritado para o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante favoritado para o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<List<Favorito>> favoritar(@RequestBody @Valid Favorito dados) {
         repositoryFavorito.save(new Favorito(dados.getFk_usuario(), dados.getFk_restaurante()));
         List<Favorito> l = repositoryFavorito.findAll();
@@ -148,6 +156,7 @@ public class UsuarioController {
     @DeleteMapping("/favoritar")
     @Operation(summary = "Metodo de desfavoritar restaurantes", description = "Desfavorita restaurante para o usuario MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante desfavoritado para o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante desfavoritado para o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
+    @CrossOrigin
     public ResponseEntity<Void> desfavoritar(@RequestBody @Valid Favorito dados) {
         FavoritoId favorito = new FavoritoId(dados.getFk_usuario(), dados.getFk_restaurante());
         if (repositoryFavorito.existsById(favorito)) {
