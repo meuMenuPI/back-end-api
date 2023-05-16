@@ -1,7 +1,6 @@
 package meumenu.application.meumenu.services;
 
-import jakarta.validation.Valid;
-import meumenu.application.meumenu.assossiativas.FavoritoRepository;
+import meumenu.application.meumenu.favorito.FavoritoRepository;
 import meumenu.application.meumenu.exceptions.CsvException;
 import meumenu.application.meumenu.exceptions.EmailException;
 import meumenu.application.meumenu.exceptions.NaoEncontradoException;
@@ -10,12 +9,9 @@ import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.FileWriter;
 import java.io.IOException;

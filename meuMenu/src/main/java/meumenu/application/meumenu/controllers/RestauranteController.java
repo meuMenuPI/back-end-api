@@ -6,27 +6,18 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import meumenu.application.meumenu.assossiativas.FavoritoRepository;
+import meumenu.application.meumenu.favorito.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.*;
 import meumenu.application.meumenu.services.RestauranteService;
-import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 @Tag(name = "Documentação dos end-points de restaurantes", description = "Documentação viva dos restaurantes feita via swagger")

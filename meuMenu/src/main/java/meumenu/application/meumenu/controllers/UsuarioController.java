@@ -1,18 +1,15 @@
 package meumenu.application.meumenu.controllers;
 
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import meumenu.application.meumenu.assossiativas.Favorito;
-import meumenu.application.meumenu.assossiativas.FavoritoId;
-import meumenu.application.meumenu.assossiativas.FavoritoRepository;
-import jdk.jfr.ContentType;
+import meumenu.application.meumenu.favorito.Favorito;
+import meumenu.application.meumenu.favorito.FavoritoId;
+import meumenu.application.meumenu.favorito.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
 import meumenu.application.meumenu.restaurante.RestauranteRepository;
@@ -22,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 @Tag(name = "Documentação dos end-points de usuarios", description = "Documentação viva dos usuarios feita via swagger")

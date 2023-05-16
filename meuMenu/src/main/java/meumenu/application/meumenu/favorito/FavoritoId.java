@@ -1,6 +1,5 @@
-package meumenu.application.meumenu.assossiativas;
+package meumenu.application.meumenu.favorito;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,4 +27,5 @@ public class FavoritoId implements Serializable {
     public int hashCode() {
         return Objects.hash(fk_usuario, fk_restaurante);
     }
+
 }

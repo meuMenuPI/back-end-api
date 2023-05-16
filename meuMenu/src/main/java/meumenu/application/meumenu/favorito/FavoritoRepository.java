@@ -1,6 +1,5 @@
-package meumenu.application.meumenu.assossiativas;
+package meumenu.application.meumenu.favorito;
 
-import meumenu.application.meumenu.usuario.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
