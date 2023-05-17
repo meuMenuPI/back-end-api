@@ -20,17 +20,26 @@ import java.time.LocalDateTime;
 @Entity(name = "Review")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @IdClass(ReviewId.class)
 public class Review {
     @Id
     private int fk_restaurante;
     @Id
     private int fk_usuario;
-    private LocalDate dataHora;
+    @Id
+    private LocalDateTime data_hora;
     private String descricao;
     private Double nt_comida;
     private Double nt_ambiente;
     private Double nt_atendimento;
 
+    public Review(DadosCadastroReview dados) {
+        this.fk_restaurante = dados.fk_restaurante();
+        this.fk_usuario = dados.fk_usuario();
+        this.data_hora = dados.data_hora();
+        this.descricao = dados.descricao();
+        this.nt_comida = dados.nt_comida();
+        this.nt_ambiente = dados.nt_ambiente();
+        this.nt_atendimento = dados.nt_atendimento();
+    }
 }

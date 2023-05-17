@@ -12,16 +12,16 @@ public record DadosCadastroReview(
         int fk_restaurante,
         @NotNull
         int fk_usuario,
-        @NotBlank
-        LocalDateTime dataHora,
+
+        LocalDateTime data_hora,
         @NotBlank
         @Length(max = 200)
         String descricao,
-        @NotBlank
+        @NotNull
         Double nt_comida,
-        @NotBlank
+        @NotNull
         Double nt_ambiente,
-        @NotBlank
+        @NotNull
         Double nt_atendimento
 
 )
