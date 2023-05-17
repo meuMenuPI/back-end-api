@@ -31,7 +31,7 @@ public class ReviewController {
     private ReviewService service;
 
     @PostMapping
-    @Operation(summary = "Metodo de cadastrar prato", description = "Create Prato MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso prato criado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso prato criado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Operation(summary = "Metodo de cadastrar review", description = "Create Review MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso review criado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso review criado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
     public ResponseEntity<DadosCadastroReview> cadastrarReview(@RequestBody @Valid DadosCadastroReview dados){
