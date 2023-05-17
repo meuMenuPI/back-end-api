@@ -12,27 +12,16 @@ public record DadosCadastroCardapio(
         Integer fk_restaurante,
         @NotBlank
         String nome,
-        @NotBlank
-        String descricao,
+
         @NotNull
         Double preco,
         @NotNull
         Especialidade estiloGastronomico,
 
-        @NotNull
-        String qtd_carboidratos,
+        @NotBlank
+        String descricao
 
-        @NotNull
-        String qtd_proteinas,
 
-        @NotNull
-        String qtd_acucar,
-
-        @NotNull
-        String qtd_calorias,
-
-        @NotNull
-        String qtd_gorduras_totais
 
 ) {
 

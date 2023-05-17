@@ -22,30 +22,18 @@ public class Cardapio {
     private Integer id;
     private Integer fk_restaurante;
     private String nome;
-    private String descricao;
+
     private Double preco;
     @Enumerated(EnumType.STRING)
     private Especialidade estiloGastronomico;
 
-    private String qtd_carboidratos;
-
-    private String qtd_proteinas;
-
-    private String qtd_acucar;
-
-    private String qtd_calorias;
-
-    private String qtd_gorduras_totais;
+    private String descricao;
 
     public Cardapio(DadosCadastroCardapio dados) {
         this.fk_restaurante = dados.fk_restaurante();
         this.nome = dados.nome();
         this.preco = dados.preco();
         this.estiloGastronomico = dados.estiloGastronomico();
-        this.qtd_carboidratos = dados.qtd_carboidratos();
-        this.qtd_calorias = dados.qtd_proteinas();
-        this.qtd_acucar = dados.qtd_acucar();
-        this.qtd_calorias = dados.qtd_calorias();
-        this.qtd_gorduras_totais = dados.qtd_gorduras_totais();
+        this.descricao = dados.descricao();
     }
 }

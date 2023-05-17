@@ -31,7 +31,7 @@ public class CardapioController {
     public ResponseEntity<Cardapio> cadastrar(@RequestBody @Valid DadosCadastroCardapio dados){
         cardapioRepository.save(new Cardapio(dados));
         List<Cardapio> cardapios = cardapioRepository.findAll();
-        Cardapio cardapio = new Cardapio(cardapios.get(cardapios.size()-1).getId(),dados.fk_restaurante() ,dados.nome(), dados.descricao(), dados.preco(), dados.estiloGastronomico(), dados.qtd_carboidratos(), dados.qtd_proteinas(), dados.qtd_acucar(), dados.qtd_calorias(), dados.qtd_gorduras_totais());
+        Cardapio cardapio = new Cardapio(cardapios.get(cardapios.size()-1).getId(),dados.fk_restaurante() ,dados.nome(), dados.preco(), dados.estiloGastronomico(),  dados.descricao());
         return ResponseEntity.status(200).body(cardapio);
     }
 
@@ -63,21 +63,7 @@ public class CardapioController {
             if (dados.getEstiloGastronomico() != null) {
                 cardapio.setEstiloGastronomico(dados.getEstiloGastronomico());
             }
-            if(dados.getQtd_carboidratos() != null){
-                cardapio.setQtd_carboidratos(dados.getQtd_carboidratos());
-            }
-            if(dados.getQtd_proteinas() != null){
-                cardapio.setQtd_proteinas(dados.getQtd_proteinas());
-            }
-            if(dados.getQtd_acucar() != null){
-                cardapio.setQtd_acucar(dados.getQtd_acucar());
-            }
-            if(dados.getQtd_calorias() != null){
-                cardapio.setQtd_calorias(dados.getQtd_calorias());
-            }
-            if(dados.getQtd_gorduras_totais() != null){
-                cardapio.setQtd_gorduras_totais(dados.getQtd_gorduras_totais());
-            }
+
             cardapioRepository.save(cardapio);
             return ResponseEntity.status(200).body(cardapio);
         }
