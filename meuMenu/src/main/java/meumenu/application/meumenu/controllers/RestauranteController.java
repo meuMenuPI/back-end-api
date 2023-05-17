@@ -6,6 +6,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import meumenu.application.meumenu.endereco.DadosCadastroEndereco;
+import meumenu.application.meumenu.endereco.Endereco;
+import meumenu.application.meumenu.endereco.EnderecoRepository;
 import meumenu.application.meumenu.favorito.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.*;
 import meumenu.application.meumenu.services.RestauranteService;
@@ -35,6 +38,9 @@ public class RestauranteController {
     private FavoritoRepository repositoryFavorito;
     @Autowired
     private RestauranteService service;
+
+    @Autowired
+    private EnderecoRepository repositoryEndereco;
 
     // biblioteca responsavel por mandar o email
     @Autowired
@@ -109,6 +115,15 @@ public class RestauranteController {
     @CrossOrigin
     public ResponseEntity<String> gravaArquivoCsv(@PathVariable Integer id) {
         return ResponseEntity.ok(this.service.gravaArquivoCsv(id));
+    }
+
+    @PostMapping("/cadastrar/endereco")
+    @Operation(summary = "Metodo de cadastrar restaurante", description = "Cadastra restaurante", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public ResponseEntity<DadosCadastroEndereco> cadastrarEndereco(@RequestBody DadosCadastroEndereco dados) {
+       this.service.cadastrarEndereco(dados);
+       return ResponseEntity.ok().body(dados);
     }
 }
 

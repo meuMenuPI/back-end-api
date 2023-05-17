@@ -1,5 +1,8 @@
 package meumenu.application.meumenu.services;
 
+import meumenu.application.meumenu.endereco.DadosCadastroEndereco;
+import meumenu.application.meumenu.endereco.Endereco;
+import meumenu.application.meumenu.endereco.EnderecoRepository;
 import meumenu.application.meumenu.favorito.FavoritoRepository;
 import meumenu.application.meumenu.exceptions.CsvException;
 import meumenu.application.meumenu.exceptions.EmailException;
@@ -27,6 +30,8 @@ public class RestauranteService {
     private FavoritoRepository repositoryFavorito;
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    private EnderecoRepository repositoryEndereco;
 
     public void cadastrar(DadosCadastroRestaurante dados) {
         this.repository.save(new Restaurante(dados));
@@ -167,6 +172,10 @@ public class RestauranteService {
                 throw new CsvException("Erro ao fazer download");
             }
         }
+    }
+    public void cadastrarEndereco(DadosCadastroEndereco dados) {
+
+        this.repositoryEndereco.save(new Endereco(dados));
     }
 }
 
