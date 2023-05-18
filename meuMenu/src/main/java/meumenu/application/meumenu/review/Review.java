@@ -34,9 +34,11 @@ public class Review {
     private Double nt_atendimento;
 
     public Review(DadosCadastroReview dados) {
+
+        LocalDateTime data = LocalDateTime.now();
         this.fk_restaurante = dados.fk_restaurante();
         this.fk_usuario = dados.fk_usuario();
-        this.data_hora = dados.data_hora();
+        this.data_hora = data;
         this.descricao = dados.descricao();
         this.nt_comida = dados.nt_comida();
         this.nt_ambiente = dados.nt_ambiente();

@@ -12,8 +12,6 @@ public record DadosCadastroReview(
         int fk_restaurante,
         @NotNull
         int fk_usuario,
-
-        LocalDateTime data_hora,
         @NotBlank
         @Length(max = 200)
         String descricao,
