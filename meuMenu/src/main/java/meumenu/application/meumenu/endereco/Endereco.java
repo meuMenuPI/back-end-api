@@ -18,14 +18,15 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer fkRestaurante;
+    private Integer fk_restaurante;
+    private Integer fk_usuario;
     private String complemento;
     private Integer numero;
     private String cep;
 
     public Endereco(DadosCadastroEndereco dados) {
-        this.id = dados.id();
-        this.fkRestaurante = dados.fkRestaurante();
+        this.fk_restaurante = dados.fk_restaurante();
+        this.fk_usuario = dados.fk_usuario();
         this.complemento = dados.complemento();
         this.numero = dados.numero();
         this.cep = dados.cep();

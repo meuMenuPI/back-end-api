@@ -52,8 +52,11 @@ public class RestauranteController {
     @CrossOrigin
     public ResponseEntity<RestauranteDTO> cadastrar(@RequestBody @Valid DadosCadastroRestaurante dados) {
         this.service.cadastrar(dados);
-        RestauranteDTO restaurante = new RestauranteDTO(dados.nome(), dados.especialidade().name(), dados.telefone(), dados.site(), dados.estrela());
-        return ResponseEntity.created(null).body(restaurante);
+            RestauranteDTO restaurante3 = new RestauranteDTO(repository.findByCnpj(dados.cnpj()).getId(),
+                repository.findByCnpj(dados.cnpj()).getNome(), repository.findByCnpj(dados.cnpj()).getEspecialidade().name(),
+                repository.findByCnpj(dados.cnpj()).getTelefone(), repository.findByCnpj(dados.cnpj()).getSite(),
+                dados.estrela());
+        return ResponseEntity.created(null).body(restaurante3);
     }
 
     @GetMapping
@@ -121,6 +124,7 @@ public class RestauranteController {
     @Operation(summary = "Metodo de cadastrar restaurante", description = "Cadastra restaurante", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
+
     public ResponseEntity<DadosCadastroEndereco> cadastrarEndereco(@RequestBody DadosCadastroEndereco dados) {
        this.service.cadastrarEndereco(dados);
        return ResponseEntity.ok().body(dados);
