@@ -4,16 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import meumenu.application.meumenu.favorito.FavoritoId;
-import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Table(name = "review")
@@ -23,9 +16,9 @@ import java.time.LocalDateTime;
 @IdClass(ReviewId.class)
 public class Review {
     @Id
-    private int fk_restaurante;
+    private int fkRestaurante;
     @Id
-    private int fk_usuario;
+    private int fkUsuario;
     @Id
     private LocalDateTime data_hora;
     private String descricao;
@@ -36,8 +29,8 @@ public class Review {
     public Review(DadosCadastroReview dados) {
 
         LocalDateTime data = LocalDateTime.now();
-        this.fk_restaurante = dados.fk_restaurante();
-        this.fk_usuario = dados.fk_usuario();
+        this.fkRestaurante = dados.fkRestaurante();
+        this.fkUsuario = dados.fkUsuario();
         this.data_hora = data;
         this.descricao = dados.descricao();
         this.nt_comida = dados.nt_comida();

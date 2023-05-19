@@ -5,14 +5,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import meumenu.application.meumenu.cardapio.Cardapio;
-import meumenu.application.meumenu.cardapio.DadosCadastroCardapio;
-import meumenu.application.meumenu.restaurante.DadosCadastroRestaurante;
-import meumenu.application.meumenu.restaurante.RestauranteDTO;
+
 import meumenu.application.meumenu.review.DadosCadastroReview;
 import meumenu.application.meumenu.review.Review;
 import meumenu.application.meumenu.review.ReviewRepository;
-import meumenu.application.meumenu.services.RestauranteService;
 import meumenu.application.meumenu.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +33,14 @@ public class ReviewController {
     public ResponseEntity<DadosCadastroReview> cadastrarReview(@RequestBody @Valid DadosCadastroReview dados){
         this.service.cadastrarReview(dados);
         return ResponseEntity.ok().body(dados);
+    }
+
+    @GetMapping("{fkRestaurante}")
+    @Operation(summary = "Metodo de listar review por id", description = "Lista review por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso review listado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante listado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public ResponseEntity<List<Review>> listarPorRestaurante(@PathVariable Integer fkRestaurante) {
+        return ResponseEntity.ok(this.service.listarPorRestaurante(fkRestaurante));
     }
 
 }

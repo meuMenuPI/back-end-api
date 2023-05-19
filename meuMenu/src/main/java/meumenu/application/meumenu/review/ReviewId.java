@@ -13,8 +13,8 @@ import java.util.Objects;
 @Data
 public class ReviewId implements Serializable {
 
-    Integer fk_usuario;
-    Integer fk_restaurante;
+    Integer fkUsuario;
+    Integer fkRestaurante;
     LocalDateTime data_hora;
 
     @Override
@@ -22,11 +22,11 @@ public class ReviewId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReviewId reviewId = (ReviewId) o;
-        return Objects.equals(fk_usuario, reviewId.fk_usuario) && Objects.equals(fk_restaurante, reviewId.fk_restaurante) && Objects.equals(data_hora, reviewId.data_hora);
+        return Objects.equals(fkUsuario, reviewId.fkUsuario) && Objects.equals(fkRestaurante, reviewId.fkRestaurante) && Objects.equals(data_hora, reviewId.data_hora);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fk_usuario, fk_restaurante, data_hora);
+        return Objects.hash(fkUsuario, fkRestaurante, data_hora);
     }
 }

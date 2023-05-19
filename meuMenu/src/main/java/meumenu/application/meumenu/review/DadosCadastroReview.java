@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 public record DadosCadastroReview(
         @NotNull
-        int fk_restaurante,
+        int fkRestaurante,
         @NotNull
-        int fk_usuario,
+        int fkUsuario,
         @NotBlank
         @Length(max = 200)
         String descricao,
