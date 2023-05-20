@@ -8,21 +8,38 @@ import jakarta.validation.Valid;
 import meumenu.application.meumenu.cardapio.Cardapio;
 import meumenu.application.meumenu.cardapio.CardapioRepository;
 import meumenu.application.meumenu.cardapio.DadosCadastroCardapio;
+import meumenu.application.meumenu.enums.Especialidade;
 import meumenu.application.meumenu.restaurante.Restaurante;
+import meumenu.application.meumenu.restaurante.RestauranteRepository;
 import meumenu.application.meumenu.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/meumenu/cardapios")
 public class CardapioController {
     @Autowired
     private CardapioRepository cardapioRepository;
+
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
     @PostMapping
     @Operation(summary = "Metodo de cadastrar prato", description = "Create Prato MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso prato criado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso prato criado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
@@ -132,4 +149,217 @@ public class CardapioController {
         }
         return ResponseEntity.status(200).body(cardapio);
     }
+
+    //Método upload txt
+    @PostMapping("/upload/txt")
+    public String upload(@RequestParam MultipartFile arquivo){
+        Path caminho = Path.of(System.getProperty("java.io.tmpdir") + "/arquivos");
+        salvar(arquivo);
+        Path caminhoTeste = Path.of(System.getProperty("java.io.tmpdir") + "/arquivos/" + arquivo.getOriginalFilename());
+        leArquivoTxt(caminhoTeste);
+        return "Salvo com sucesso";
+    }
+
+    public void salvar(MultipartFile arquivo){
+        Path diretorioPath;
+        if(System.getProperty("os.name").contains("Windows")){
+            diretorioPath = Path.of(System.getProperty("java.io.tmpdir") + "/arquivos");
+        }else{
+            diretorioPath = Path.of(System.getProperty("user.dir") + "/arquivos");
+        }
+        Path arquivoPath = diretorioPath.resolve(arquivo.getOriginalFilename());
+
+        try {
+            Files.createDirectories(diretorioPath);
+            arquivo.transferTo(arquivoPath.toFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Erro em salvar");
+        }
+    }
+
+    public void leArquivoTxt(Path arquivo) {
+        BufferedReader entrada = null;
+        String registro, tipoRegistro;
+        String ra, nome, curso, disciplina;
+        Double media;
+        int qtdFalta;
+        int contaRegDadoLido = 0;
+        int qtdRegDadoGravado;
+        Restaurante optionalRestaurante;
+        int idRestaurante = 0;
+        String nomeArq = arquivo.toString();
+
+        //nomeArq += ".txt";
+
+//        List<Aluno> listaLida = new ArrayList<>();
+        // try-catch para abrir o arquivo
+        try {
+            entrada = new BufferedReader(new FileReader(nomeArq));
+        }
+        catch (IOException erro) {
+            System.out.println("Erro na abertura do arquivo");
+            System.exit(1);
+        }
+
+        // try-catch para leitura do arquivo
+        try {
+            registro = entrada.readLine(); // le o primeiro registro do arquivo
+
+            while (registro != null) {
+                // 01234567890
+                // 00NOTA20231
+                tipoRegistro = registro.substring(0,2);     // obtem os 2 primeiros caracteres do registro
+                // substring - primeiro argumento é onde começa a substring dentro da string
+                // e o segundo argumento é onde termina a substring + 1
+                // Verifica se o tipoRegistro é um header, ou um trailer, ou um registro de dados
+                if (tipoRegistro.equals("00")) {
+                    System.out.println("é um registro de header");
+                    System.out.println("Tipo de arquivo: " + registro.substring(2,6));
+                    System.out.println("Ano/semestre: " + registro.substring(6,11));
+                    System.out.println("Data e hora da gravação do arquivo: " + registro.substring(11,30));
+                    System.out.println("Versão do documento de layout: " + registro.substring(30,32));
+                }
+                else if (tipoRegistro.equals("01")) {
+                    System.out.println("é um registro de trailer");
+                    qtdRegDadoGravado = Integer.parseInt(registro.substring(2,12));
+                    if (contaRegDadoLido == qtdRegDadoGravado) {
+                        System.out.println("Quantidade de registros lidos compatível com " +
+                                "quantidade de registros gravados");
+                    }
+                    else {
+                        System.out.println("Quantidade de registros lidos incompatível com " +
+                                "quantidade de registros gravados");
+                    }
+                }
+                else if(tipoRegistro.equals("02")){
+                    String cnpj = registro.substring(2,16).trim();
+                    optionalRestaurante = restauranteRepository.findByCnpj(cnpj);
+                    idRestaurante = optionalRestaurante.getId();
+                }
+                else if (tipoRegistro.equals("03")) {
+
+                    nome = registro.substring(2,36).trim();
+                    Double preco =  Double.valueOf(registro.substring(36,43).replace(',','.'));
+                    String especialidadeString = registro.substring(43,53).trim();
+                    Especialidade especialidadeEnum = Especialidade.valueOf(especialidadeString);
+                    String descricao = registro.substring(55,152).trim();
+                    List<Cardapio> cardapios = cardapioRepository.findAll();
+                    Cardapio cardapioNovo = new Cardapio(cardapios.size() + 1,idRestaurante , nome, preco, especialidadeEnum, descricao);
+                    List<Cardapio> lista = new ArrayList<>();
+                    lista.add(cardapioNovo);
+                    cardapioRepository.save(cardapioNovo);
+
+                    contaRegDadoLido++;
+                }
+                else {
+                    System.out.println("tipo de registro inválido");
+                }
+                // le o proximo registro do arquivo
+                registro = entrada.readLine();
+            }
+            entrada.close();
+        }
+        catch (IOException erro) {
+            System.out.println("Erro ao ler o arquivo");
+        }
+
+        String nomeTeste = arquivo.toString();
+        File arquivoDelete = new File(nomeTeste);
+        arquivoDelete.delete();
+    }
+
+    // Método download txt
+
+    @GetMapping("/download/txt")
+    public ResponseEntity<String> downloadTxtFile() throws IOException {
+        // Gera o conteúdo do arquivo TXT
+        String content = "Este é um arquivo de texto gerado dinamicamente.";
+
+        // Define o nome do arquivo
+        String filename = "Pratos_Gerais.txt";
+
+        // Obtém o diretório de downloads do usuário
+        String userHome = System.getProperty("user.home");
+        String downloadsPath = userHome + "/Downloads/";
+
+        List<Cardapio> lista = cardapioRepository.findAll();
+
+        // Cria o arquivo TXT
+        File file = new File(downloadsPath + filename);
+        try (FileWriter writer = new FileWriter(file)) {
+            gravaArquivoTxt(lista, file.getAbsolutePath());
+            //writer.write(content);
+        }
+
+        // Move o arquivo para o diretório de downloads
+        Path sourcePath = file.toPath();
+        Path destinationPath = Path.of(downloadsPath, filename);
+        Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+        // Cria um objeto Resource com base no arquivo
+        Resource resource = new FileSystemResource(destinationPath.toFile());
+
+        // Configura o cabeçalho de resposta
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+
+        return ResponseEntity.status(200).body("Download executado com sucesso");
+
+    }
+
+    public static void gravaArquivoTxt(List<Cardapio> lista, String nomeArq) {
+        //nomeArq += ".txt";
+        int contaRegistroDado = 0;
+
+        // Monta o registro de header
+        String header = "00CARDAPIO20231";
+        header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        header += "01";
+
+        // Grava o registro de header
+        gravaRegistro(header, nomeArq);
+
+        // Monta e grava os registros de dados ou registros de corpo
+        String corpo;
+        for (Cardapio a : lista) {
+            corpo = "03";
+            corpo += String.format("%-34.34s",a.getNome());
+            corpo += String.format("%07.2f",a.getPreco());
+            corpo += String.format("%-12.12s",a.getEstiloGastronomico());
+            corpo += String.format("%-100.100s",a.getDescricao());
+
+            gravaRegistro(corpo, nomeArq);
+            contaRegistroDado++;
+        }
+
+        // Monta e grava o registro de trailer
+        String trailer = "01";
+        trailer += String.format("%010d",contaRegistroDado);
+        gravaRegistro(trailer, nomeArq);
+
+    }
+
+
+    public static void gravaRegistro(String registro, String nomeArq) {
+        BufferedWriter saida = null;
+
+        // try-catch para abrir o arquivo
+        try {
+            saida = new BufferedWriter(new FileWriter(nomeArq, true));
+        }
+        catch (IOException erro) {
+            System.out.println("Erro ao abrir o arquivo" + erro);
+            System.exit(1);
+        }
+
+        // try-catch para gravar o registro e finalizar
+        try {
+            saida.append(registro + "\n");
+            saida.close();
+        }
+        catch (IOException erro) {
+            System.out.println("Erro ao gravar no arquivo");
+        }
+    }
+
 }
