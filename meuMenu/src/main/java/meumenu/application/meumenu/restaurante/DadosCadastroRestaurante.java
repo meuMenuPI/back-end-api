@@ -19,6 +19,7 @@ public record DadosCadastroRestaurante (
         String cnpj,
         @NotNull
         Especialidade especialidade,
+        boolean beneficio,
         @NotNull
         String telefone,
 

@@ -26,6 +26,7 @@ public class Restaurante implements Recomendavel {
     private String cnpj;
     @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
+    private boolean beneficio;
     private String telefone;
     private String site;
     private Integer estrela;
@@ -35,6 +36,7 @@ public class Restaurante implements Recomendavel {
         this.nome = dados.nome();
         this.cnpj = dados.cnpj();
         this.especialidade = dados.especialidade();
+        this.beneficio = dados.beneficio();
         this.telefone = dados.telefone();
         this.site = dados.site();
         this.estrela = dados.estrela();

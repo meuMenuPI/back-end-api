@@ -1,0 +1,1 @@
+alter table restaurante add column beneficio boolean;

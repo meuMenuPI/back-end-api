@@ -54,7 +54,7 @@ public class RestauranteController {
     public ResponseEntity<RestauranteDTO> cadastrar(@RequestBody @Valid DadosCadastroRestaurante dados) {
         this.service.cadastrar(dados);
             RestauranteDTO restaurante3 = new RestauranteDTO(repository.findByCnpj(dados.cnpj()).getId(),
-                repository.findByCnpj(dados.cnpj()).getNome(), repository.findByCnpj(dados.cnpj()).getEspecialidade().name(),
+                repository.findByCnpj(dados.cnpj()).getNome(), repository.findByCnpj(dados.cnpj()).getEspecialidade().name(),repository.findByCnpj(dados.cnpj()).isBeneficio(),
                 repository.findByCnpj(dados.cnpj()).getTelefone(), repository.findByCnpj(dados.cnpj()).getSite(),
                 dados.estrela());
         return ResponseEntity.created(null).body(restaurante3);
@@ -139,7 +139,7 @@ public class RestauranteController {
         List<RestauranteDTO> restauranteDTO = new ArrayList<>();
         if (restaurantesFiltrados.isEmpty()) throw new NaoEncontradoException("Nenhum restaurante encontrado");
         for (Restaurante r : restaurantesFiltrados) {
-            meumenu.application.meumenu.restaurante.RestauranteDTO dto = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela());
+            meumenu.application.meumenu.restaurante.RestauranteDTO dto = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.isBeneficio(), r.getTelefone(), r.getSite(), r.getEstrela());
             restauranteDTO.add(dto);
         }
         return ResponseEntity.status(200).body(restauranteDTO);

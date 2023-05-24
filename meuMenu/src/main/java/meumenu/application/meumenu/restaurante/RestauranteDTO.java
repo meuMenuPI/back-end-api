@@ -12,13 +12,15 @@ public class RestauranteDTO {
     private Integer id;
     private String nome;
     private String especialidade;
+    private boolean beneficio;
     private String telefone;
     private String site;
     private Integer estrela;
 
-    public RestauranteDTO(String nome, String especialidade, String telefone, String site, Integer estrela) {
+    public RestauranteDTO(String nome, String especialidade, boolean beneficio, String telefone, String site, Integer estrela) {
         this.nome = nome;
         this.especialidade = especialidade;
+        this.beneficio = beneficio;
         this.telefone = telefone;
         this.site = site;
         this.estrela = estrela;

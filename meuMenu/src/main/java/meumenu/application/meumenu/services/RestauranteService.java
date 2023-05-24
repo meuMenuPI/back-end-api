@@ -42,7 +42,7 @@ public class RestauranteService {
         List<Restaurante> tempRestaurante = repository.findAll();
         if (tempRestaurante.isEmpty()) throw new NaoEncontradoException("Nenhum restaurante encontrado");
         for (Restaurante r : tempRestaurante) {
-            meumenu.application.meumenu.restaurante.RestauranteDTO dto = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela());
+            meumenu.application.meumenu.restaurante.RestauranteDTO dto = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.isBeneficio(), r.getTelefone(), r.getSite(), r.getEstrela());
             restauranteDTO.add(dto);
         }
         return restauranteDTO;
@@ -53,7 +53,7 @@ public class RestauranteService {
         if (r.isEmpty()) {
             throw new NaoEncontradoException("Nenhum restaurante encontrado");
         }
-        RestauranteDTO restaurante = new RestauranteDTO(r.get().getId(), r.get().getNome(), r.get().getEspecialidade().name(), r.get().getTelefone(), r.get().getSite(), r.get().getEstrela());
+        RestauranteDTO restaurante = new RestauranteDTO(r.get().getId(), r.get().getNome(), r.get().getEspecialidade().name(),r.get().isBeneficio(), r.get().getTelefone(), r.get().getSite(), r.get().getEstrela());
         return restaurante;
 
     }
