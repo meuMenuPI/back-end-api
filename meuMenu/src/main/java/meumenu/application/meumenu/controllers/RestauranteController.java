@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import meumenu.application.meumenu.endereco.DadosCadastroEndereco;
 import meumenu.application.meumenu.endereco.Endereco;
 import meumenu.application.meumenu.endereco.EnderecoRepository;
+import meumenu.application.meumenu.exceptions.NaoEncontradoException;
 import meumenu.application.meumenu.favorito.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.*;
 import meumenu.application.meumenu.services.RestauranteService;
@@ -124,11 +125,26 @@ public class RestauranteController {
     @Operation(summary = "Metodo de cadastrar restaurante", description = "Cadastra restaurante", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-
     public ResponseEntity<DadosCadastroEndereco> cadastrarEndereco(@RequestBody DadosCadastroEndereco dados) {
        this.service.cadastrarEndereco(dados);
        return ResponseEntity.ok().body(dados);
     }
+
+    @GetMapping("/filtrar/especialidade")
+    @Operation(summary = "Metodo de filtrar por especialidade restaurante", description = "filtra po especialidade ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public ResponseEntity<List<RestauranteDTO>> filtrarPorEspecialidade(@RequestParam String especialidade){
+        List<Restaurante> restaurantesFiltrados = repository.findByRestauranteEspecialidade(especialidade);
+        List<RestauranteDTO> restauranteDTO = new ArrayList<>();
+        if (restaurantesFiltrados.isEmpty()) throw new NaoEncontradoException("Nenhum restaurante encontrado");
+        for (Restaurante r : restaurantesFiltrados) {
+            meumenu.application.meumenu.restaurante.RestauranteDTO dto = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.getTelefone(), r.getSite(), r.getEstrela());
+            restauranteDTO.add(dto);
+        }
+        return ResponseEntity.status(200).body(restauranteDTO);
+    }
+
 }
 
 
