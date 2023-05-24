@@ -145,6 +145,21 @@ public class RestauranteController {
         return ResponseEntity.status(200).body(restauranteDTO);
     }
 
+    @GetMapping("/filtrar/beneficio")
+    @Operation(summary = "Metodo de filtrar por beneficio restaurante", description = "filtra por beneficio ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public ResponseEntity<List<RestauranteDTO>> filtrarPorBeneficio(@RequestParam boolean beneficio){
+        List<Restaurante> restaurantesFiltrados = repository.findByBeneficio(beneficio);
+        List<RestauranteDTO> restauranteDTO = new ArrayList<>();
+        if (restaurantesFiltrados.isEmpty()) throw new NaoEncontradoException("Nenhum restaurante encontrado");
+        for (Restaurante r : restaurantesFiltrados) {
+            meumenu.application.meumenu.restaurante.RestauranteDTO dto = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.isBeneficio(), r.getTelefone(), r.getSite(), r.getEstrela());
+            restauranteDTO.add(dto);
+        }
+        return ResponseEntity.status(200).body(restauranteDTO);
+    }
+
 }
 
 
