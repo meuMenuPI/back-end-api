@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 
 import meumenu.application.meumenu.review.DadosCadastroReview;
 import meumenu.application.meumenu.review.Review;
+import meumenu.application.meumenu.review.ReviewDTO;
 import meumenu.application.meumenu.review.ReviewRepository;
 import meumenu.application.meumenu.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class ReviewController {
     @Operation(summary = "Metodo de listar review por id", description = "Lista review por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso review listado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante listado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<List<Review>> listarPorRestaurante(@RequestParam Integer fkRestaurante) {
+    public ResponseEntity<List<ReviewDTO>> listarPorRestaurante(@RequestParam Integer fkRestaurante) {
         return ResponseEntity.ok(this.service.listarPorRestaurante(fkRestaurante));
     }
 
