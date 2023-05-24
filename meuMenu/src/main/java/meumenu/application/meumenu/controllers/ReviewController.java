@@ -35,11 +35,11 @@ public class ReviewController {
         return ResponseEntity.ok().body(dados);
     }
 
-    @GetMapping("{fkRestaurante}")
+    @GetMapping
     @Operation(summary = "Metodo de listar review por id", description = "Lista review por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso review listado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante listado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<List<Review>> listarPorRestaurante(@PathVariable Integer fkRestaurante) {
+    public ResponseEntity<List<Review>> listarPorRestaurante(@RequestParam Integer fkRestaurante) {
         return ResponseEntity.ok(this.service.listarPorRestaurante(fkRestaurante));
     }
 
