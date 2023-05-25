@@ -26,5 +26,7 @@ public record DadosCadastroUsuario(
         String senha,
 
         @NotNull
-        Especialidade tipoComidaPreferida) {
+        Especialidade tipoComidaPreferida,
+
+        String fotoPerfil)           {
 }

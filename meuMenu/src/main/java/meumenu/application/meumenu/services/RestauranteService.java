@@ -1,5 +1,11 @@
 package meumenu.application.meumenu.services;
 
+import com.azure.core.http.rest.Response;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobContainerClientBuilder;
+import com.azure.storage.blob.models.BlockBlobItem;
+import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import meumenu.application.meumenu.endereco.DadosCadastroEndereco;
 import meumenu.application.meumenu.endereco.Endereco;
 import meumenu.application.meumenu.endereco.EnderecoRepository;
@@ -15,9 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -32,6 +42,9 @@ public class RestauranteService {
     private JavaMailSender javaMailSender;
     @Autowired
     private EnderecoRepository repositoryEndereco;
+
+    @Autowired
+    private RestauranteFotoRepository repositoryFoto;
 
     public void cadastrar(DadosCadastroRestaurante dados) {
         this.repository.save(new Restaurante(dados));
@@ -176,6 +189,46 @@ public class RestauranteService {
     public void cadastrarEndereco(DadosCadastroEndereco dados) {
 
         this.repositoryEndereco.save(new Endereco(dados));
+    }
+
+    public void cadastrarImagem(int id, MultipartFile imagem) throws IOException {
+        byte[] bytes = imagem.getBytes();
+        if (bytes.length == 0){
+            throw new IOException("Imagem não contem bytes");
+        }
+
+        Optional<Restaurante> restaurante = repository.findById(id);
+
+        if (restaurante.isEmpty()) {
+            throw new RuntimeException("Restaurante não encontrado");
+        }
+
+        String fileName = LocalDateTime.now() + imagem.getOriginalFilename();
+
+        String constr = "DefaultEndpointsProtocol=https;AccountName=meumenuimagens;AccountKey=R9lel0MHe6" +
+                "BQTZj3c7dDQYXKKGiC75NpsmLi/IqBChb4NAGFT5kheiorbVyx/pSAo9VC5e/Ktkju+AStGIYs7w==;Endpoint" +
+                "Suffix=core.windows.net";
+
+
+
+        BlobContainerClient container = new BlobContainerClientBuilder()
+                .connectionString(constr).containerName("restaurante").buildClient();
+
+        BlobClient blob = container.getBlobClient(fileName);
+
+
+        Response<BlockBlobItem> response = blob.uploadWithResponse(
+                new BlobParallelUploadOptions(new ByteArrayInputStream(bytes), bytes.length),
+                Duration.ofHours(5),
+                null);
+
+        if (response.getStatusCode() != 201) {
+            throw new IOException("request failed");
+        }
+
+        RestauranteFoto restauranteFoto = new RestauranteFoto(fileName,false,false);
+
+        this.repositoryFoto.save(restauranteFoto);
     }
 }
 

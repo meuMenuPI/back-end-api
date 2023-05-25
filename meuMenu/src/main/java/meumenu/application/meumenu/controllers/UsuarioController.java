@@ -1,6 +1,12 @@
 package meumenu.application.meumenu.controllers;
 
 
+import com.azure.core.http.rest.Response;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobContainerClientBuilder;
+import com.azure.storage.blob.models.BlockBlobItem;
+import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -18,7 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Tag(name = "Documentação dos end-points de usuarios", description = "Documentação viva dos usuarios feita via swagger")
@@ -163,6 +174,48 @@ public class UsuarioController {
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping("/foto-usuario/{id}")
+    public ResponseEntity<Boolean> cadastroFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
+
+        byte[] bytes = imagem.getBytes();
+        if (bytes.length == 0){
+            throw new IOException("Imagem não contem bytes");
+        }
+
+        Optional<Usuario> usuario = repository.findById(id);
+
+        if (usuario.isEmpty()) {
+            throw new RuntimeException("Usuario não encontrado");
+        }
+
+        String fileName = LocalDateTime.now() + imagem.getOriginalFilename();
+
+        String constr = "DefaultEndpointsProtocol=https;AccountName=meumenuimagens;AccountKey=R9lel0MHe6" +
+                "BQTZj3c7dDQYXKKGiC75NpsmLi/IqBChb4NAGFT5kheiorbVyx/pSAo9VC5e/Ktkju+AStGIYs7w==;Endpoint" +
+                "Suffix=core.windows.net";
+
+        BlobContainerClient container = new BlobContainerClientBuilder()
+                .connectionString(constr).containerName("foto-suario").buildClient();
+
+        BlobClient blob = container.getBlobClient(fileName);
+
+
+        Response<BlockBlobItem> response = blob.uploadWithResponse(
+                new BlobParallelUploadOptions(new ByteArrayInputStream(bytes), bytes.length),
+                Duration.ofHours(5),
+                null);
+
+        if (response.getStatusCode() != 201) {
+            throw new IOException("request failed");
+        }
+
+        usuario.get().setFotoPerfil(fileName);
+
+        repository.save(usuario.get());
+
+        return ResponseEntity.status(200).body(true);
     }
 
 }
