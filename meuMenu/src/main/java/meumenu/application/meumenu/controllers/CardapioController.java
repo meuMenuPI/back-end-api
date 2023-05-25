@@ -1,5 +1,11 @@
 package meumenu.application.meumenu.controllers;
 
+import com.azure.core.http.rest.Response;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobContainerClientBuilder;
+import com.azure.storage.blob.models.BlockBlobItem;
+import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -26,6 +32,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -360,6 +367,48 @@ public class CardapioController {
         catch (IOException erro) {
             System.out.println("Erro ao gravar no arquivo");
         }
+    }
+
+    @PostMapping("/foto-prato/{id}")
+    public ResponseEntity<Boolean> cadastroFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
+
+        byte[] bytes = imagem.getBytes();
+        if (bytes.length == 0){
+            throw new IOException("Imagem não contem bytes");
+        }
+
+        Optional<Cardapio> prato = cardapioRepository.findById(id);
+
+        if (prato.isEmpty()) {
+            throw new RuntimeException("prato não encontrado");
+        }
+
+        String fileName = LocalDateTime.now() + imagem.getOriginalFilename();
+
+        String constr = "DefaultEndpointsProtocol=https;AccountName=meumenuimagens;AccountKey=R9lel0MHe6" +
+                "BQTZj3c7dDQYXKKGiC75NpsmLi/IqBChb4NAGFT5kheiorbVyx/pSAo9VC5e/Ktkju+AStGIYs7w==;Endpoint" +
+                "Suffix=core.windows.net";
+
+        BlobContainerClient container = new BlobContainerClientBuilder()
+                .connectionString(constr).containerName("pratos").buildClient();
+
+        BlobClient blob = container.getBlobClient(fileName);
+
+
+        Response<BlockBlobItem> response = blob.uploadWithResponse(
+                new BlobParallelUploadOptions(new ByteArrayInputStream(bytes), bytes.length),
+                Duration.ofHours(5),
+                null);
+
+        if (response.getStatusCode() != 201) {
+            throw new IOException("request failed");
+        }
+
+        prato.get().setFotoPrato(fileName);
+
+        cardapioRepository.save(prato.get());
+
+        return ResponseEntity.status(200).body(true);
     }
 
 }

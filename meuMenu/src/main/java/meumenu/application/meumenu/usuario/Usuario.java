@@ -26,6 +26,7 @@ public class  Usuario implements Recomendavel {
     private String cpf;
     private String email;
     private String senha;
+    private String fotoPerfil;
     @Enumerated(EnumType.STRING)
     private Especialidade tipoComidaPreferida;
 
@@ -38,6 +39,7 @@ public class  Usuario implements Recomendavel {
         this.email = dados.email();
         this.senha = dados.senha();
         this.tipoComidaPreferida = dados.tipoComidaPreferida();
+        this.fotoPerfil = null;
     }
 
     @Override

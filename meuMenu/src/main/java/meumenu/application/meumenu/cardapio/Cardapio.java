@@ -29,11 +29,22 @@ public class Cardapio {
 
     private String descricao;
 
+    private String fotoPrato;
+
     public Cardapio(DadosCadastroCardapio dados) {
         this.fk_restaurante = dados.fk_restaurante();
         this.nome = dados.nome();
         this.preco = dados.preco();
         this.estiloGastronomico = dados.estiloGastronomico();
         this.descricao = dados.descricao();
+    }
+
+    public Cardapio(Integer id, Integer fk_restaurante, String nome, Double preco, Especialidade estiloGastronomico, String descricao) {
+        this.id = id;
+        this.fk_restaurante = fk_restaurante;
+        this.nome = nome;
+        this.preco = preco;
+        this.estiloGastronomico = estiloGastronomico;
+        this.descricao = descricao;
     }
 }

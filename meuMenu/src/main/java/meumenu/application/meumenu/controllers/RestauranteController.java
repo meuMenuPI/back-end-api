@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.endereco.DadosCadastroEndereco;
-import meumenu.application.meumenu.endereco.Endereco;
 import meumenu.application.meumenu.endereco.EnderecoRepository;
 import meumenu.application.meumenu.exceptions.NaoEncontradoException;
 import meumenu.application.meumenu.favorito.FavoritoRepository;
@@ -20,8 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.*;
 
 @Tag(name = "Documentação dos end-points de restaurantes", description = "Documentação viva dos restaurantes feita via swagger")
@@ -143,6 +144,18 @@ public class RestauranteController {
             restauranteDTO.add(dto);
         }
         return ResponseEntity.status(200).body(restauranteDTO);
+    }
+
+    @PostMapping("/foto-restaurante/{id}")
+    public ResponseEntity<Boolean> cadastrarFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
+
+        Optional<Restaurante> restaurante = repository.findById(id);
+
+        service.cadastrarImagem(id,imagem);
+
+        repository.save(restaurante.get());
+
+        return ResponseEntity.status(200).body(true);
     }
 
 }
