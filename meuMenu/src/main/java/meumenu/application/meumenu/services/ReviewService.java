@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class ReviewService {
         List<ReviewDTO> rDTO = new ArrayList<>();
         for (Review r : review){
             Optional<Usuario> user = repositoryUsuario.findById(r.getFkUsuario());
-            rDTO.add(new ReviewDTO(user.orElseThrow().getNome(), r.getFkRestaurante(), r.getFkUsuario(), r.getData_hora(), r.getDescricao(), r.getNt_comida(), r.getNt_ambiente(), r.getNt_atendimento()));
+            rDTO.add(new ReviewDTO(user.orElseThrow().getNome(), r.getFkRestaurante(), r.getFkUsuario(), r.getData_hora().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)), r.getDescricao(), r.getNt_comida(), r.getNt_ambiente(), r.getNt_atendimento()));
         }
         if (review.isEmpty()) {
             throw new NaoEncontradoException("Nenhuma review encontrado nesse restaurante");
