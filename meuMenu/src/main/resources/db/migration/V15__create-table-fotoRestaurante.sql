@@ -1,4 +1,4 @@
-CREATE TABLE fotoRestaurante (
+CREATE TABLE foto_restaurante (
 	                         id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
                              fkRestaurante INT,
                              nomeFoto VARCHAR(110),
