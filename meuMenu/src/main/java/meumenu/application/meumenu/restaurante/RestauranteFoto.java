@@ -6,21 +6,23 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Table(name = "restauranteFoto")
+@Table(name = "RestauranteFoto")
 @Entity(name = "RestauranteFoto")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class RestauranteFoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private int fkRestaurante;
     private String nomeFoto;
     private boolean fachada;
     private boolean interior;
 
-    public RestauranteFoto(String nomeFoto, boolean fachada, boolean interior) {
+    public RestauranteFoto(int fkRestaurante, String nomeFoto, boolean fachada, boolean interior) {
+        this.fkRestaurante = fkRestaurante;
         this.nomeFoto = nomeFoto;
         this.fachada = fachada;
         this.interior = interior;

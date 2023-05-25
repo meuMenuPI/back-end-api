@@ -226,7 +226,7 @@ public class RestauranteService {
             throw new IOException("request failed");
         }
 
-        RestauranteFoto restauranteFoto = new RestauranteFoto(fileName,false,false);
+        RestauranteFoto restauranteFoto = new RestauranteFoto( id,fileName,false,false);
 
         this.repositoryFoto.save(restauranteFoto);
     }
