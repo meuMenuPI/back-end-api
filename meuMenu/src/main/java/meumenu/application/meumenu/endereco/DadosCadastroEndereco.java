@@ -7,7 +7,8 @@ public record DadosCadastroEndereco(
         Integer fk_usuario,
         String complemento,
         Integer numero,
-        String cep
+        String cep,
+        String uf
 
 ) {
 }

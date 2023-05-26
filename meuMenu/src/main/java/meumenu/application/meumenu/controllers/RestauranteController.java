@@ -184,6 +184,25 @@ public class RestauranteController {
 
     }
 
+    @GetMapping("/filtrar/bem-avaliado")
+    @Operation(summary = "Metodo de filtrar restaurante por avaliação", description = "filtra por avaliação ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante listado por avaliação!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante filtrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public List<RestauranteReviewDTO> listarReview(@RequestParam Integer fkRestaurante) {
+        List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteBemAvaliadoDTO(fkRestaurante);
+        return restauranteDTO;
+
+    }
+
+    @GetMapping("/filtrar/uf")
+    @Operation(summary = "Metodo de filtrar restaurante por uf", description = "filtra por uf ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante listado por avaliação!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante filtrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public List<RestauranteReviewDTO> listarPorUF(@RequestParam Integer fkRestaurante, @RequestParam String uf) {
+        List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteUFDTO(fkRestaurante, uf);
+        return restauranteDTO;
+
+    }
 }
 
 

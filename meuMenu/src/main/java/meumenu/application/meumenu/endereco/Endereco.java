@@ -23,6 +23,7 @@ public class Endereco {
     private String complemento;
     private Integer numero;
     private String cep;
+    private String uf;
 
     public Endereco(DadosCadastroEndereco dados) {
         this.fk_restaurante = dados.fk_restaurante();
@@ -30,5 +31,6 @@ public class Endereco {
         this.complemento = dados.complemento();
         this.numero = dados.numero();
         this.cep = dados.cep();
+        this.uf = dados.uf();
     }
 }
