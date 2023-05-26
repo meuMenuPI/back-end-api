@@ -232,13 +232,13 @@ public class RestauranteService {
         this.repositoryFoto.save(restauranteFoto);
     }
 
-    public List<RestauranteReviewDTO> listarReview(Integer fkRestaurante) {
-        List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteBemAvaliadoDTO(fkRestaurante);
+    public List<RestauranteReviewDTO> listarReview() {
+        List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteBemAvaliadoDTO();
         return restauranteDTO;
     }
 
-    public List<RestauranteReviewDTO> listarRestaurantePorUf(Integer fkRestaurante , String uf) {
-        List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteUFDTO(fkRestaurante, uf);
+    public List<RestauranteReviewDTO> listarRestaurantePorUf(String uf) {
+        List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteUFDTO(uf);
         return restauranteDTO;
     }
 }
