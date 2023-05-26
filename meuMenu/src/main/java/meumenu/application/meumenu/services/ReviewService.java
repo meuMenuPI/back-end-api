@@ -1,10 +1,7 @@
 package meumenu.application.meumenu.services;
 
 import meumenu.application.meumenu.exceptions.NaoEncontradoException;
-import meumenu.application.meumenu.review.DadosCadastroReview;
-import meumenu.application.meumenu.review.Review;
-import meumenu.application.meumenu.review.ReviewDTO;
-import meumenu.application.meumenu.review.ReviewRepository;
+import meumenu.application.meumenu.review.*;
 import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
@@ -26,9 +23,13 @@ public class ReviewService {
     @Autowired
     private UsuarioRepository repositoryUsuario;
 
-    public void cadastrarReview(DadosCadastroReview dados){
+    public ReviewDTOCadastro cadastrarReview(DadosCadastroReview dados){
+
+        ReviewDTOCadastro rDTO = new ReviewDTOCadastro(dados.fkRestaurante(),
+                dados.fkUsuario(), dados.descricao(), dados.nt_comida(), dados.nt_ambiente(), dados.nt_atendimento());
 
         this.repositoryReview.save(new Review(dados));
+        return rDTO;
     }
     public List listarPorRestaurante(Integer fkRestaurante) {
         List<Review> review = repositoryReview.findByFkRestaurante(fkRestaurante);

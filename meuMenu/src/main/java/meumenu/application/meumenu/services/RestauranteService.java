@@ -46,8 +46,9 @@ public class RestauranteService {
     @Autowired
     private RestauranteFotoRepository repositoryFoto;
 
-    public void cadastrar(DadosCadastroRestaurante dados) {
+    public DadosCadastroRestaurante cadastrar(DadosCadastroRestaurante dados) {
         this.repository.save(new Restaurante(dados));
+        return dados;
     }
 
     public List<RestauranteDTO> listar() {
