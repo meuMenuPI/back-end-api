@@ -42,6 +42,9 @@ public class RestauranteController {
     private RestauranteService service;
 
     @Autowired
+    private RestauranteFotoRepository repositoryFoto;
+
+    @Autowired
     private EnderecoRepository repositoryEndereco;
 
     // biblioteca responsavel por mandar o email
@@ -156,6 +159,13 @@ public class RestauranteController {
         repository.save(restaurante.get());
 
         return ResponseEntity.status(200).body(true);
+    }
+
+    @GetMapping("/foto-restaurante")
+    public ResponseEntity<List<RestauranteFoto>> listarFotos(@RequestParam int id){
+        List<RestauranteFoto> listFoto = repositoryFoto.findByFkRestaurante(id);
+
+        return ResponseEntity.status(200).body(listFoto);
     }
 
     @GetMapping("/filtrar/beneficio")
