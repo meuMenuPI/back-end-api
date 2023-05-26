@@ -20,4 +20,10 @@ public class RestauranteReviewDTO {
         this.media = media;
 
     }
+
+    public RestauranteReviewDTO(String nome,Integer id,String nomeFoto) {
+        this.nome = nome;
+        this.id = id;
+        this.nomeFoto = nomeFoto;
+    }
 }

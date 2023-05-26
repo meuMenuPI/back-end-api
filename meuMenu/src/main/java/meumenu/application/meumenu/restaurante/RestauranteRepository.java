@@ -9,6 +9,19 @@ import java.util.List;
 
 public interface RestauranteRepository extends JpaRepository<Restaurante, Integer>{
     Restaurante findByCnpj(String cnpj);
+    @Query(value = "select  r.nome, r.id,(SELECT nome_foto FROM restaurante_foto WHERE fk_restaurante = ?1 LIMIT 1) AS nomeFoto from restaurante as r join endereco as e on r.id = e.fk_restaurante where e.uf = ?2 limit 15", nativeQuery = true)
+    List<Object[]> findByRestauranteUF  (Integer fkRestaurante, String uf);
+    default List<RestauranteReviewDTO> findByRestauranteUFDTO(Integer fkRestaurante, String uf) {
+        List<Object[]> results = findByRestauranteUF(fkRestaurante,uf);
+        List<RestauranteReviewDTO> dtos = new ArrayList<>();
+
+        for (Object[] result : results) {
+            RestauranteReviewDTO dto = RestauranteUfDTOMapper.map(result);
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
 
     @Query(value = "select * from restaurante  where especialidade = ?1", nativeQuery = true)
     List<Restaurante> findByRestauranteEspecialidade  (String especialidade);

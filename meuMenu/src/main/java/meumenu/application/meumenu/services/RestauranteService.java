@@ -234,7 +234,11 @@ public class RestauranteService {
     public List<RestauranteReviewDTO> listarReview(Integer fkRestaurante) {
         List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteBemAvaliadoDTO(fkRestaurante);
         return restauranteDTO;
+    }
 
+    public List<RestauranteReviewDTO> listarRestaurantePorUf(Integer fkRestaurante , String uf) {
+        List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteUFDTO(fkRestaurante, uf);
+        return restauranteDTO;
     }
 }
 
