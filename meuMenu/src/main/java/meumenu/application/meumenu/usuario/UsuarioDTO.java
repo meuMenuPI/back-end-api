@@ -13,5 +13,6 @@ public class UsuarioDTO {
     private String sobrenome;
     private String email;
     private String tipoComidaPreferida;
+    private String fotoPerfil;
 }
 

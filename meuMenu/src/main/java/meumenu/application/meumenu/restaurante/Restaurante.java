@@ -55,7 +55,7 @@ public class Restaurante implements Recomendavel {
         }
         for(Usuario u : listaUsuario){
             if(u.getTipoComidaPreferida().name().equals(tempR.getEspecialidade().name())){
-                listaRecomendacao.add(new UsuarioDTO(u.getId(),u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
+                listaRecomendacao.add(new UsuarioDTO(u.getId(),u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name(), u.getFotoPerfil()));
             }
         }
         return listaRecomendacao;
