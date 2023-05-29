@@ -50,7 +50,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
         repository.save(new Usuario(dados));
         List<Usuario> tempUsuario = repository.findAll();
-        UsuarioDTO usuario = new UsuarioDTO(tempUsuario.get(tempUsuario.size() - 1).getId(), dados.nome(), dados.sobrenome(), dados.email(), dados.tipoComidaPreferida().name());
+        UsuarioDTO usuario = new UsuarioDTO(tempUsuario.get(tempUsuario.size() - 1).getId(), dados.nome(), dados.sobrenome(), dados.email(), dados.tipoComidaPreferida().name(), null);
         return ResponseEntity.status(200).body(usuario);
     }
 
@@ -62,7 +62,7 @@ public class UsuarioController {
         List<UsuarioDTO> usuariosDTO = new ArrayList<>();
         List<Usuario> tempUsuario = repository.findAll();
         for (Usuario u : tempUsuario) {
-            usuariosDTO.add(new UsuarioDTO(u.getId(), u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name()));
+            usuariosDTO.add(new UsuarioDTO(u.getId(), u.getNome(), u.getSobrenome(), u.getEmail(), u.getTipoComidaPreferida().name(), u.getFotoPerfil()));
         }
         return ResponseEntity.status(200).body(usuariosDTO);
     }
@@ -75,7 +75,7 @@ public class UsuarioController {
         Optional<Usuario> u = repository.findById(id);
 
         if (u.isPresent()) {
-            UsuarioDTO usuario = new UsuarioDTO(u.get().getId(), u.get().getNome(), u.get().getSobrenome(), u.get().getEmail(), u.get().getTipoComidaPreferida().name());
+            UsuarioDTO usuario = new UsuarioDTO(u.get().getId(), u.get().getNome(), u.get().getSobrenome(), u.get().getEmail(), u.get().getTipoComidaPreferida().name(), u.get().getFotoPerfil());
             return ResponseEntity.status(200).body(usuario);
         }
         return ResponseEntity.status(404).build();
@@ -113,7 +113,7 @@ public class UsuarioController {
             return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(200).body(new UsuarioDTO(b.get().getId(), b.get().getNome(), b.get().getSobrenome(), b.get().getEmail(), b.get().getTipoComidaPreferida().name()));
+        return ResponseEntity.status(200).body(new UsuarioDTO(b.get().getId(), b.get().getNome(), b.get().getSobrenome(), b.get().getEmail(), b.get().getTipoComidaPreferida().name(), b.get().getFotoPerfil()));
     }
 
     @DeleteMapping("/{id}")
