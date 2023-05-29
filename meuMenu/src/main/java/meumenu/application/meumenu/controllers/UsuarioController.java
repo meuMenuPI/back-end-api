@@ -176,8 +176,8 @@ public class UsuarioController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/foto-usuario/{id}")
-    public ResponseEntity<Boolean> cadastroFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
+    @PutMapping("/foto-usuario/{id}")
+    public ResponseEntity<String> cadastroFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
 
         byte[] bytes = imagem.getBytes();
         if (bytes.length == 0){
@@ -215,7 +215,7 @@ public class UsuarioController {
 
         repository.save(usuario.get());
 
-        return ResponseEntity.status(200).body(true);
+        return ResponseEntity.status(200).body(usuario.get().getFotoPerfil());
     }
 
 }
