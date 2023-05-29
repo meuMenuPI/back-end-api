@@ -138,15 +138,10 @@ public class RestauranteController {
     @Operation(summary = "Metodo de filtrar por especialidade restaurante", description = "filtra po especialidade ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<List<RestauranteDTO>> filtrarPorEspecialidade(@RequestParam String especialidade){
-        List<Restaurante> restaurantesFiltrados = repository.findByRestauranteEspecialidade(especialidade);
-        List<RestauranteDTO> restauranteDTO = new ArrayList<>();
+    public ResponseEntity<List<RestauranteReviewDTO>> filtrarPorEspecialidade(@RequestParam String especialidade){
+        List<RestauranteReviewDTO> restaurantesFiltrados = repository.findByRestauranteEspecialidadeDTO(especialidade);
         if (restaurantesFiltrados.isEmpty()) throw new NaoEncontradoException("Nenhum restaurante encontrado");
-        for (Restaurante r : restaurantesFiltrados) {
-            meumenu.application.meumenu.restaurante.RestauranteDTO dto = new RestauranteDTO(r.getId(), r.getNome(), r.getEspecialidade().name(), r.isBeneficio(), r.getTelefone(), r.getSite(), r.getEstrela());
-            restauranteDTO.add(dto);
-        }
-        return ResponseEntity.status(200).body(restauranteDTO);
+        return ResponseEntity.status(200).body(restaurantesFiltrados);
     }
 
     @PostMapping("/foto-restaurante/{id}")
