@@ -227,7 +227,15 @@ public class RestauranteService {
             throw new IOException("request failed");
         }
 
+        int contador = repositoryFoto.countByFkRestaurante(id);
+
         RestauranteFoto restauranteFoto = new RestauranteFoto( id,fileName,false,false);
+
+        if (contador == 0){
+            restauranteFoto.setFachada(true);
+        }else if (contador == 1 || contador == 2) {
+            restauranteFoto.setInterior(true);
+        }
 
         this.repositoryFoto.save(restauranteFoto);
     }
