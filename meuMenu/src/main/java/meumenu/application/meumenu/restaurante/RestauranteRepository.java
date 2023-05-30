@@ -23,8 +23,11 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
         return dtos;
     }
 
+    @Query(value = "select distinct(especialidade) from restaurante", nativeQuery = true)
+    List<String> findByEspecialidadesDestintas();
+
     @Query(value = "SELECT r.nome, r.id, (SELECT nome_foto FROM restaurante_foto WHERE fk_restaurante = r.id LIMIT 1) AS nomeFoto " +
-            " from restaurante as r where especialidade != ?1 LIMIT 15", nativeQuery = true)
+            " from restaurante as r where especialidade = ?1 LIMIT 15", nativeQuery = true)
     List<Object[]> findByRestauranteEspecialidade(String especialidade);
     default List<RestauranteReviewDTO> findByRestauranteEspecialidadeDTO(String especialidade) {
         List<Object[]> results = findByRestauranteEspecialidade(especialidade);

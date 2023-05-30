@@ -249,5 +249,10 @@ public class RestauranteService {
         List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteUFDTO(uf);
         return restauranteDTO;
     }
+
+    public List<String> listarEspecialidadesDistintas(){
+        List<String> lista = repository.findByEspecialidadesDestintas();
+        return lista;
+    }
 }
 
