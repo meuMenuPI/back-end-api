@@ -153,6 +153,18 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(restauranteDTO);
     }
 
+    @GetMapping("/favoritar")
+    @Operation(summary = "Metodo de listar os usuarios favoritados", description = "listar se o usuario favoritou o restaurante", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante favoritado para o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante favoritado para o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public ResponseEntity<Integer[]> getfavoritar(@RequestParam Integer fk_usuario, @RequestParam Integer fk_restaurante) {
+        Integer seguindo [] = repositoryFavorito.FindSeguindo(fk_usuario, fk_restaurante);
+        if(seguindo[0] == 0){
+            return ResponseEntity.status(204).body(seguindo);
+        }
+        return ResponseEntity.status(200).body(seguindo);
+    }
+
     @PostMapping("/favoritar")
     @Operation(summary = "Metodo de favoritar restaurantes", description = "Favorita restaurante para o usuario MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante favoritado para o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante favoritado para o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
