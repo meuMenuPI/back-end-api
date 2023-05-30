@@ -167,8 +167,8 @@ public class UsuarioController {
     @Operation(summary = "Metodo de desfavoritar restaurantes", description = "Desfavorita restaurante para o usuario MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante desfavoritado para o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante desfavoritado para o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<Void> desfavoritar(@RequestBody @Valid Favorito dados) {
-        FavoritoId favorito = new FavoritoId(dados.getFk_usuario(), dados.getFk_restaurante());
+    public ResponseEntity<Void> desfavoritar(@RequestParam Integer fk_usuario, @RequestParam Integer fk_restaurante ) {
+        FavoritoId favorito = new FavoritoId(fk_usuario, fk_restaurante);
         if (repositoryFavorito.existsById(favorito)) {
             repositoryFavorito.deleteById(favorito);
             return ResponseEntity.status(200).build();
