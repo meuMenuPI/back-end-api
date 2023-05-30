@@ -196,8 +196,17 @@ public class RestauranteController {
     public List<RestauranteReviewDTO> listarPorUF(@RequestParam String uf) {
         List<RestauranteReviewDTO> restauranteDTO = repository.findByRestauranteUFDTO(uf);
         return restauranteDTO;
-
     }
+
+    @GetMapping("/filtrar/nome-especialiade")
+    @Operation(summary = "Metodo de pegar especialidades", description = "pega especialidades destintas ", responses = {@ApiResponse(responseCode = "200", description = "Lista Retornada!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Lista retornada!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public List<String> listarEspecialidades(){
+        List<String> lista = repository.findByEspecialidadesDestintas();
+        return lista;
+    }
+
 }
 
 
