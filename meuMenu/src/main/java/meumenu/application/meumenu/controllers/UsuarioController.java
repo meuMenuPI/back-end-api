@@ -85,21 +85,21 @@ public class UsuarioController {
     @Operation(summary = "Metodo de atualizar dados do usuario", description = "Atualizar o usuario meu menu especificado por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso atualizou o usuario MeuMenu!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso atualizou o usuario MeuMenu!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<String> atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id) {
+    public ResponseEntity<Usuario> atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id) {
         if (repository.existsById(id)) {
             Usuario usuario = repository.findById(id).orElseThrow();
             if(dados.getTipoComidaPreferida() != null) {
                 usuario.setTipoComidaPreferida(dados.getTipoComidaPreferida());}
-            if(dados.getNome().equals("")) {
+            if(dados.getNome() != null) {
                 usuario.setNome(dados.getNome());}
-            if(dados.getSobrenome().equals("")) {
+            if(dados.getSobrenome() != null) {
                 usuario.setSobrenome(dados.getSobrenome());}
-            if(dados.getEmail().equals("")) {
+            if(dados.getEmail() != null) {
                 usuario.setEmail(dados.getEmail());}
             repository.save(usuario);
-            return ResponseEntity.status(200).body("Usuário atualizado com sucesso");
+            return ResponseEntity.status(200).body(usuario);
         }
-        return ResponseEntity.status(404).body("Usuário não encontrado");
+        return ResponseEntity.status(404).build();
     }
 
     @PostMapping("/logar")
