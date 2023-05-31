@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import meumenu.application.meumenu.endereco.DadosCadastroEndereco;
+import meumenu.application.meumenu.endereco.Endereco;
 import meumenu.application.meumenu.endereco.EnderecoRepository;
 import meumenu.application.meumenu.exceptions.NaoEncontradoException;
 import meumenu.application.meumenu.favorito.FavoritoRepository;
@@ -93,6 +94,12 @@ public class RestauranteController {
 
     }
 
+    @PutMapping("/atualizar/endereco/{id}")
+    public ResponseEntity<Endereco> atualizarEndereco(@PathVariable int id, @RequestBody Endereco dados){
+        this.service.atualizarEndereco(id, dados);
+        return ResponseEntity.ok().body(dados);
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Metodo de deletar restaurante por id", description = "Deleta restaurante por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante deletado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante deletado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
@@ -133,6 +140,8 @@ public class RestauranteController {
        this.service.cadastrarEndereco(dados);
        return ResponseEntity.ok().body(dados);
     }
+
+
 
     @GetMapping("/filtrar/especialidade")
     @Operation(summary = "Metodo de filtrar por especialidade restaurante", description = "filtra po especialidade ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})

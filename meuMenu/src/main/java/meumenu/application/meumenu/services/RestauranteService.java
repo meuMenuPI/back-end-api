@@ -87,8 +87,27 @@ public class RestauranteService {
         if (dados.getEstrela() != null) {
             restaurante.setEstrela(dados.getEstrela());
         }
+        if (dados.getEspecialidade() != null) {
+            restaurante.setEspecialidade(dados.getEspecialidade());
+        }
+
         repository.save(restaurante);
         return restaurante;
+    }
+
+    public Endereco atualizarEndereco(int id, Endereco dados){
+        Endereco endereco = repositoryEndereco.findById(id).orElseThrow();
+        if(dados.getCep() != null){
+            endereco.setCep(dados.getCep());
+        }if(dados.getNumero() != null){
+            endereco.setNumero(dados.getNumero());
+        }if(dados.getComplemento() != null){
+            endereco.setComplemento(dados.getComplemento());
+        }if(dados.getUf() != null){
+            endereco.setUf(dados.getUf());
+        }
+        repositoryEndereco.save(endereco);
+        return endereco;
     }
 
     public void deletar(Integer id) {
