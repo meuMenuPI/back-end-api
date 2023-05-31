@@ -18,9 +18,11 @@ import meumenu.application.meumenu.usuario.Usuario;
 import meumenu.application.meumenu.usuario.UsuarioDTO;
 import meumenu.application.meumenu.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -67,7 +69,7 @@ public class RestauranteService {
         if (r.isEmpty()) {
             throw new NaoEncontradoException("Nenhum restaurante encontrado");
         }
-        RestauranteDTO restaurante = new RestauranteDTO(r.get().getId(), r.get().getNome(), r.get().getEspecialidade().name(),r.get().isBeneficio(), r.get().getTelefone(), r.get().getSite(), r.get().getEstrela());
+        RestauranteDTO restaurante = new RestauranteDTO(r.get().getId(), r.get().getNome(), r.get().getEspecialidade().name(), r.get().isBeneficio(), r.get().getTelefone(), r.get().getSite(), r.get().getEstrela());
         return restaurante;
 
     }
@@ -95,15 +97,18 @@ public class RestauranteService {
         return restaurante;
     }
 
-    public Endereco atualizarEndereco(int id, Endereco dados){
+    public Endereco atualizarEndereco(int id, Endereco dados) {
         Endereco endereco = repositoryEndereco.findById(id).orElseThrow();
-        if(dados.getCep() != null){
+        if (dados.getCep() != null) {
             endereco.setCep(dados.getCep());
-        }if(dados.getNumero() != null){
+        }
+        if (dados.getNumero() != null) {
             endereco.setNumero(dados.getNumero());
-        }if(dados.getComplemento() != null){
+        }
+        if (dados.getComplemento() != null) {
             endereco.setComplemento(dados.getComplemento());
-        }if(dados.getUf() != null){
+        }
+        if (dados.getUf() != null) {
             endereco.setUf(dados.getUf());
         }
         repositoryEndereco.save(endereco);
@@ -206,6 +211,7 @@ public class RestauranteService {
             }
         }
     }
+
     public void cadastrarEndereco(DadosCadastroEndereco dados) {
 
         this.repositoryEndereco.save(new Endereco(dados));
@@ -213,7 +219,7 @@ public class RestauranteService {
 
     public void cadastrarImagem(int id, MultipartFile imagem) throws IOException {
         byte[] bytes = imagem.getBytes();
-        if (bytes.length == 0){
+        if (bytes.length == 0) {
             throw new IOException("Imagem não contem bytes");
         }
 
@@ -228,7 +234,6 @@ public class RestauranteService {
         String constr = "DefaultEndpointsProtocol=https;AccountName=meumenuimagens;AccountKey=R9lel0MHe6" +
                 "BQTZj3c7dDQYXKKGiC75NpsmLi/IqBChb4NAGFT5kheiorbVyx/pSAo9VC5e/Ktkju+AStGIYs7w==;Endpoint" +
                 "Suffix=core.windows.net";
-
 
 
         BlobContainerClient container = new BlobContainerClientBuilder()
@@ -248,11 +253,11 @@ public class RestauranteService {
 
         int contador = repositoryFoto.countByFkRestaurante(id);
 
-        RestauranteFoto restauranteFoto = new RestauranteFoto( id,fileName,false,false);
+        RestauranteFoto restauranteFoto = new RestauranteFoto(id, fileName, false, false);
 
-        if (contador == 0){
+        if (contador == 0) {
             restauranteFoto.setFachada(true);
-        }else if (contador == 1 || contador == 2) {
+        } else if (contador == 1 || contador == 2) {
             restauranteFoto.setInterior(true);
         }
 
@@ -269,9 +274,14 @@ public class RestauranteService {
         return restauranteDTO;
     }
 
-    public List<String> listarEspecialidadesDistintas(){
+    public List<String> listarEspecialidadesDistintas() {
         List<String> lista = repository.findByEspecialidadesDestintas();
         return lista;
+    }
+
+    public ResponseEntity<Endereco> listarEndereco(Integer id) {
+        Optional<Endereco> endereco = repositoryEndereco.findByFkRestaurante(id);
+        return ResponseEntity.of(endereco);
     }
 }
 

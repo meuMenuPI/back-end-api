@@ -141,7 +141,14 @@ public class RestauranteController {
        return ResponseEntity.ok().body(dados);
     }
 
-
+    @GetMapping("/endereco/{id}")
+    @Operation(summary = "Metodo de pegar dados endereço", description = "Metodo de pegar dados endereço", responses = {@ApiResponse(responseCode = "200", description = "Sucesso endereço retornado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso endereço retornado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public ResponseEntity<Endereco> listarEndereco(@PathVariable Integer id){
+        Optional<Endereco> endereco = repositoryEndereco.findByFkRestaurante(id);
+        return ResponseEntity.of(endereco);
+    }
 
     @GetMapping("/filtrar/especialidade")
     @Operation(summary = "Metodo de filtrar por especialidade restaurante", description = "filtra po especialidade ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante cadastrado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
