@@ -88,7 +88,14 @@ public class UsuarioController {
     public ResponseEntity<String> atualizar(@RequestBody @Valid Usuario dados, @PathVariable int id) {
         if (repository.existsById(id)) {
             Usuario usuario = repository.findById(id).orElseThrow();
-            usuario.setTipoComidaPreferida(dados.getTipoComidaPreferida());
+            if(dados.getTipoComidaPreferida() != null) {
+                usuario.setTipoComidaPreferida(dados.getTipoComidaPreferida());}
+            if(dados.getNome().equals("")) {
+                usuario.setNome(dados.getNome());}
+            if(dados.getSobrenome().equals("")) {
+                usuario.setSobrenome(dados.getSobrenome());}
+            if(dados.getEmail().equals("")) {
+                usuario.setEmail(dados.getEmail());}
             repository.save(usuario);
             return ResponseEntity.status(200).body("Usuário atualizado com sucesso");
         }
