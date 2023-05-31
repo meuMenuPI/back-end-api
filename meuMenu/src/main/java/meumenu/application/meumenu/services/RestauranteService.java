@@ -75,7 +75,6 @@ public class RestauranteService {
     }
 
     public Restaurante atualizar(Restaurante dados, int id) {
-
         Restaurante restaurante = repository.findById(id).orElseThrow();
         if (dados.getNome() != null) {
             restaurante.setNome(dados.getNome());
@@ -92,7 +91,6 @@ public class RestauranteService {
         if (dados.getEspecialidade() != null) {
             restaurante.setEspecialidade(dados.getEspecialidade());
         }
-
         repository.save(restaurante);
         return restaurante;
     }
