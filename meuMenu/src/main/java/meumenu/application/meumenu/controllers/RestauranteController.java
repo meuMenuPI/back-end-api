@@ -218,6 +218,14 @@ public class RestauranteController {
         return lista;
     }
 
+    @GetMapping("/filtrar/fkUsuario/{fkUsuario}")
+    @Operation(summary = "Metodo de pegar restaurante fkUsuario", description = "Metodo de pegar restaurante fkUsuario", responses = {@ApiResponse(responseCode = "200", description = "Metodo de pegar restaurante fkUsuario!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Metodo de pegar restaurante fkUsuario!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public Optional<Restaurante> pegarPelaFk(@PathVariable Integer fkUsuario){
+        Optional<Restaurante> restaurante = repository.findByUsuario(fkUsuario);
+        return restaurante;
+    }
 }
 
 

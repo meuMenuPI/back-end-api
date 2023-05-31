@@ -6,6 +6,10 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import meumenu.application.meumenu.endereco.DadosCadastroEndereco;
 import meumenu.application.meumenu.endereco.Endereco;
 import meumenu.application.meumenu.endereco.EnderecoRepository;
@@ -22,6 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -280,6 +287,11 @@ public class RestauranteService {
     public ResponseEntity<Endereco> listarEndereco(Integer id) {
         Optional<Endereco> endereco = repositoryEndereco.findByFkRestaurante(id);
         return ResponseEntity.of(endereco);
+    }
+
+    public Optional<Restaurante> pegarPelaFk(Integer fkUsuario){
+        Optional <Restaurante> restaurante = repository.findByUsuario(fkUsuario);
+        return restaurante;
     }
 }
 
