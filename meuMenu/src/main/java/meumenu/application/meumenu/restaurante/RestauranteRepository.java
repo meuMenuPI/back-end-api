@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface RestauranteRepository extends JpaRepository<Restaurante, Integer>{
     Restaurante findByCnpj(String cnpj);
@@ -60,5 +61,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
 
         return dtos;
     }
+
+    Optional<Restaurante> findByUsuario(Integer fkUsuario);
 
 }
