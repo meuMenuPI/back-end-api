@@ -373,6 +373,9 @@ public class CardapioController {
     }
 
     @PostMapping("/foto-prato/{id}")
+    @Operation(summary = "Metodo de cadastro de fotos do cardapio", description = "post de fotos ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso fotos!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
     public ResponseEntity<Boolean> cadastroFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
 
         byte[] bytes = imagem.getBytes();
