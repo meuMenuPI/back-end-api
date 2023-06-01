@@ -42,7 +42,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Intege
     }
     List<Restaurante> findByBeneficio(boolean beneficio);
 
-    @Query(value = "SELECT distinct(r.nome), r.id, (SELECT nome_foto FROM restaurante_foto WHERE fk_restaurante = r.id LIMIT 1) AS nomeFoto, (SELECT SUM(nt_comida + nt_ambiente + nt_atendimento) / (SELECT COUNT(fk_restaurante) * 3 FROM review WHERE fk_restaurante = r.id)FROM review WHERE fk_restaurante = r.id) AS media FROM restaurante AS r JOIN restaurante_foto AS rf ON r.id = rf.fk_restaurante ORDER BY media DESC LIMIT 15", nativeQuery = true)
+    @Query(value = "SELECT distinct(r.nome), r.id, (SELECT nome_foto FROM restaurante_foto WHERE fk_restaurante = r.id LIMIT 1) AS nomeFoto, (SELECT SUM(nt_comida + nt_ambiente + nt_atendimento) / (SELECT COUNT(fk_restaurante) * 3 FROM review WHERE fk_restaurante = r.id)FROM review WHERE fk_restaurante = r.id) AS media FROM restaurante AS r ORDER BY media DESC LIMIT 15", nativeQuery = true)
     List<Object[]> findByRestauranteBemAvaliado();
 
     // select pulando linha para entender ->   SELECT r.nome, r.id, (SELECT nome_foto FROM restaurante_foto WHERE fk_restaurante = r.id LIMIT 1) AS nomeFoto,
