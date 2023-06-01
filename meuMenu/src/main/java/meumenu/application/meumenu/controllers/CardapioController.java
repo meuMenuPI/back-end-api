@@ -71,13 +71,13 @@ public class CardapioController {
         return ResponseEntity.status(200).body(cardapios);
     }
 
-    @PutMapping()
+    @PutMapping("/{id}")
     @Operation(summary = "Metodo de atualizar dados do prato", description = "Atualiza prato por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso prato atualizado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso prato atualizado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<Cardapio> atualizar(@RequestBody @Valid Cardapio dados) {
-        if (cardapioRepository.existsById(dados.getId())) {
-            Cardapio cardapio = cardapioRepository.findById(dados.getId()).orElseThrow();
+    public ResponseEntity<Cardapio> atualizar(@PathVariable int id, @RequestBody @Valid Cardapio dados) {
+        if (cardapioRepository.existsById(id)) {
+            Cardapio cardapio = cardapioRepository.findById(id).orElseThrow();
             if (dados.getNome() != null) {
                 cardapio.setNome(dados.getNome());
             }
@@ -86,6 +86,9 @@ public class CardapioController {
             }
             if (dados.getEstiloGastronomico() != null) {
                 cardapio.setEstiloGastronomico(dados.getEstiloGastronomico());
+            }
+            if (dados.getDescricao() != null) {
+                cardapio.setDescricao(dados.getDescricao());
             }
 
             cardapioRepository.save(cardapio);
