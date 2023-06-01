@@ -161,6 +161,9 @@ public class RestauranteController {
     }
 
     @PostMapping("/foto-restaurante/{id}")
+    @Operation(summary = "Metodo de cadastro nas fotos dos restaurantes", description = "post de fotos ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso fotos!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
     public ResponseEntity<Boolean> cadastrarFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
 
         Optional<Restaurante> restaurante = repository.findById(id);
@@ -173,6 +176,9 @@ public class RestauranteController {
     }
 
     @GetMapping("/foto-restaurante")
+    @Operation(summary = "Metodo de get nas fotos dos restaurantes", description = "get de fotos ", responses = {@ApiResponse(responseCode = "200", description = "Sucesso fotos!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante cadastrado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
     public ResponseEntity<List<RestauranteFoto>> listarFotos(@RequestParam int id){
         List<RestauranteFoto> listFoto = repositoryFoto.findByFkRestaurante(id);
 
