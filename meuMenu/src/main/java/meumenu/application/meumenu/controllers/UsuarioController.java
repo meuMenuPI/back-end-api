@@ -1,6 +1,7 @@
 package meumenu.application.meumenu.controllers;
 
 
+import com.azure.core.annotation.Headers;
 import com.azure.core.http.rest.Response;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
@@ -8,6 +9,7 @@ import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlockBlobItem;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -196,6 +198,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/foto-usuario/{id}")
+    @CrossOrigin
     public ResponseEntity<String> cadastroFoto(@PathVariable int id, @RequestParam MultipartFile imagem) throws IOException {
 
         byte[] bytes = imagem.getBytes();
