@@ -85,13 +85,8 @@ public class RestauranteController {
     @Operation(summary = "Metodo de atualizar dados do restaurante", description = "Atualiza restaurante por id", responses = {@ApiResponse(responseCode = "200", description = "Sucesso restaurante atualizado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso restaurante atualizado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<String> atualizar(@RequestBody @Valid Restaurante dados, @PathVariable int id) {
-        Restaurante restaurante = this.service.atualizar(dados, id);
-        if (restaurante.equals(dados)) {
-            return ResponseEntity.ok("Restaurante atualizado");
-        }
-        return ResponseEntity.notFound().build();
-
+    public ResponseEntity<Restaurante> atualizar(@RequestBody @Valid Restaurante dados, @PathVariable int id) {
+        return ResponseEntity.ok(this.service.atualizar(dados, id));
     }
 
     @PutMapping("/atualizar/endereco/{id}")
@@ -223,6 +218,14 @@ public class RestauranteController {
         return lista;
     }
 
+    @GetMapping("/filtrar/fkUsuario/{fkUsuario}")
+    @Operation(summary = "Metodo de pegar restaurante fkUsuario", description = "Metodo de pegar restaurante fkUsuario", responses = {@ApiResponse(responseCode = "200", description = "Metodo de pegar restaurante fkUsuario!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Metodo de pegar restaurante fkUsuario!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public Optional<Restaurante> pegarPelaFk(@PathVariable Integer fkUsuario){
+        Optional<Restaurante> restaurante = repository.findByUsuario(fkUsuario);
+        return restaurante;
+    }
 }
 
 
