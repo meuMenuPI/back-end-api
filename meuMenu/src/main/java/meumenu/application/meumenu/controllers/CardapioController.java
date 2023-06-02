@@ -276,6 +276,7 @@ public class CardapioController {
         String nomeTeste = arquivo.toString();
         File arquivoDelete = new File(nomeTeste);
         arquivoDelete.delete();
+        System.out.println("Finalizado TXT");
     }
 
     // Método download txt
