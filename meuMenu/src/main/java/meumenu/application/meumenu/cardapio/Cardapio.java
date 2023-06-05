@@ -37,6 +37,7 @@ public class Cardapio {
         this.preco = dados.preco();
         this.estiloGastronomico = dados.estiloGastronomico();
         this.descricao = dados.descricao();
+        this.fotoPrato = null;
     }
 
     public Cardapio(Integer id, Integer fk_restaurante, String nome, Double preco, Especialidade estiloGastronomico, String descricao) {
@@ -46,5 +47,6 @@ public class Cardapio {
         this.preco = preco;
         this.estiloGastronomico = estiloGastronomico;
         this.descricao = descricao;
+        this.fotoPrato = null;
     }
 }
