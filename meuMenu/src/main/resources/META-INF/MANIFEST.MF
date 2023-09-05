@@ -1,0 +1,68 @@
+Manifest-Version: 1.0
+Main-Class: meumenu.application.meumenu.MeuMenuApplication
+Class-Path: nimbus-jose-jwt-9.30.2.jar jakarta.validation-api-3.0.2.jar 
+ oauth2-oidc-sdk-10.7.1.jar jakarta.persistence-api-3.1.0.jar spring-boo
+ t-starter-json-3.0.2.jar netty-tcnative-boringssl-static-2.0.56.Final.j
+ ar spring-boot-starter-tomcat-3.0.2.jar jna-platform-5.6.0.jar jna-5.13
+ .0.jar jul-to-slf4j-2.0.6.jar spring-expression-6.0.4.jar netty-buffer-
+ 4.1.87.Final.jar spring-jdbc-6.0.4.jar netty-tcnative-boringssl-static-
+ 2.0.56.Final-windows-x86_64.jar spring-data-commons-3.0.1.jar spring-bo
+ ot-starter-aop-3.0.2.jar spring-webmvc-6.0.4.jar spring-context-support
+ -6.0.4.jar jackson-dataformat-toml-2.14.1.jar spring-boot-starter-web-3
+ .0.2.jar netty-handler-proxy-4.1.87.Final.jar reactor-core-3.5.2.jar sp
+ ring-cloud-azure-service-4.7.0.jar msal4j-persistence-extension-1.2.0.j
+ ar spring-data-jpa-3.0.1.jar log4j-to-slf4j-2.19.0.jar lombok-1.18.24.j
+ ar azure-storage-common-12.21.0.jar springdoc-openapi-starter-webmvc-ap
+ i-2.0.0.jar tomcat-embed-el-10.1.5.jar asm-9.1.jar netty-resolver-dns-c
+ lasses-macos-4.1.87.Final.jar jboss-logging-3.5.0.Final.jar azure-core-
+ management-1.10.2.jar netty-common-4.1.87.Final.jar spring-boot-3.0.2.j
+ ar netty-codec-dns-4.1.87.Final.jar hibernate-core-6.1.6.Final.jar spri
+ ng-cloud-azure-core-4.7.0.jar classmate-1.5.1.jar snakeyaml-1.33.jar ja
+ ndex-2.4.2.Final.jar netty-codec-http2-4.1.87.Final.jar tomcat-embed-we
+ bsocket-10.1.5.jar json-smart-2.4.8.jar netty-tcnative-boringssl-static
+ -2.0.56.Final-osx-x86_64.jar spring-boot-starter-3.0.2.jar spring-boot-
+ starter-logging-3.0.2.jar accessors-smart-2.4.8.jar netty-codec-http-4.
+ 1.87.Final.jar jakarta.inject-api-2.0.0.jar netty-tcnative-boringssl-st
+ atic-2.0.56.Final-linux-aarch_64.jar spring-jcl-6.0.4.jar reactor-netty
+ -http-1.1.2.jar netty-resolver-dns-4.1.87.Final.jar jackson-dataformat-
+ xml-2.14.1.jar lang-tag-1.7.jar tomcat-embed-core-10.1.5.jar netty-tcna
+ tive-boringssl-static-2.0.56.Final-linux-x86_64.jar jakarta.activation-
+ api-2.1.1.jar log4j-api-2.19.0.jar azure-core-amqp-2.8.3.jar msal4j-1.1
+ 3.8.jar aspectjweaver-1.9.19.jar jackson-core-2.14.1.jar azure-storage-
+ blob-12.22.0.jar swagger-core-jakarta-2.2.7.jar qpid-proton-j-extension
+ s-1.2.4.jar spring-context-6.0.4.jar flyway-mysql-9.14.1.jar spring-boo
+ t-starter-mail-3.0.2.jar webjars-locator-core-0.52.jar azure-json-1.0.0
+ .jar spring-boot-starter-jdbc-3.0.2.jar netty-codec-socks-4.1.87.Final.
+ jar javax.mail-api-1.6.2.jar byte-buddy-1.12.22.jar logback-classic-1.4
+ .5.jar netty-transport-native-unix-common-4.1.87.Final.jar azure-identi
+ ty-1.9.0.jar jakarta.xml.bind-api-4.0.0.jar spring-cloud-azure-autoconf
+ igure-4.7.0.jar netty-transport-4.1.87.Final.jar spring-boot-autoconfig
+ ure-3.0.2.jar hibernate-validator-8.0.0.Final.jar springdoc-openapi-sta
+ rter-common-2.0.0.jar spring-core-6.0.4.jar netty-resolver-dns-native-m
+ acos-4.1.87.Final-osx-x86_64.jar netty-transport-classes-kqueue-4.1.87.
+ Final.jar txw2-4.0.1.jar jackson-datatype-jdk8-2.14.1.jar classgraph-4.
+ 8.149.jar spring-aspects-6.0.4.jar netty-tcnative-boringssl-static-2.0.
+ 56.Final-osx-aarch_64.jar h2-2.1.214.jar woodstox-core-6.4.0.jar spring
+ -beans-6.0.4.jar angus-activation-1.0.0.jar logback-core-1.4.5.jar spri
+ ng-boot-starter-validation-3.0.2.jar mysql-connector-j-8.0.32.jar sprin
+ g-web-6.0.4.jar spring-boot-devtools-3.0.2.jar springdoc-openapi-starte
+ r-webmvc-ui-2.0.0.jar swagger-annotations-jakarta-2.2.7.jar netty-codec
+ -4.1.87.Final.jar jakarta.annotation-api-2.1.1.jar reactor-netty-core-1
+ .1.2.jar netty-tcnative-classes-2.0.56.Final.jar jackson-module-paramet
+ er-names-2.14.1.jar spring-boot-starter-data-jpa-3.0.2.jar netty-transp
+ ort-native-epoll-4.1.87.Final-linux-x86_64.jar netty-transport-native-k
+ queue-4.1.87.Final-osx-x86_64.jar jakarta.transaction-api-2.0.1.jar azu
+ re-storage-internal-avro-12.7.0.jar slf4j-api-2.0.6.jar hibernate-commo
+ ns-annotations-6.0.2.Final.jar commons-lang3-3.12.0.jar jaxb-runtime-4.
+ 0.1.jar jackson-annotations-2.14.1.jar stax2-api-4.2.1.jar proton-j-0.3
+ 3.8.jar jackson-dataformat-yaml-2.14.1.jar netty-handler-4.1.87.Final.j
+ ar jcip-annotations-1.0-1.jar netty-resolver-4.1.87.Final.jar flyway-co
+ re-9.14.1.jar spring-orm-6.0.4.jar jaxb-core-4.0.1.jar spring-tx-6.0.4.
+ jar azure-core-1.38.0.jar jakarta.mail-1.0.0.jar micrometer-observation
+ -1.10.3.jar azure-core-http-netty-1.13.2.jar netty-transport-classes-ep
+ oll-4.1.87.Final.jar reactive-streams-1.0.4.jar antlr4-runtime-4.10.1.j
+ ar swagger-models-jakarta-2.2.7.jar jackson-databind-2.14.1.jar HikariC
+ P-5.0.1.jar swagger-ui-4.15.5.jar jackson-datatype-jsr310-2.14.1.jar sp
+ ring-aop-6.0.4.jar micrometer-commons-1.10.3.jar istack-commons-runtime
+ -4.1.1.jar content-type-2.2.jar
+
