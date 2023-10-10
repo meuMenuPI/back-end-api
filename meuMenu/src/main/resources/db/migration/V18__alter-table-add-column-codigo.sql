@@ -1,0 +1,1 @@
+alter table usuario add column cod_email char(6);
