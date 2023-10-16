@@ -15,18 +15,25 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import meumenu.application.meumenu.exceptions.EmailException;
+import meumenu.application.meumenu.exceptions.NaoEncontradoException;
 import meumenu.application.meumenu.favorito.Favorito;
 import meumenu.application.meumenu.favorito.FavoritoId;
 import meumenu.application.meumenu.favorito.FavoritoRepository;
+import meumenu.application.meumenu.restaurante.Email;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
 import meumenu.application.meumenu.restaurante.RestauranteRepository;
 import meumenu.application.meumenu.usuario.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import java.lang.Math;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -44,6 +51,10 @@ public class UsuarioController {
     private RestauranteRepository repositoryRestaurante;
     @Autowired
     private FavoritoRepository repositoryFavorito;
+
+    private String email_temp;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @PostMapping("/cadastrar")
     @Operation(summary = "Metodo de cadastrar usuario", description = "Create User MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso usuario meu menu criado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso usuario meu menu criado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
@@ -241,5 +252,66 @@ public class UsuarioController {
 
         return ResponseEntity.status(200).body(usuario.get().getFotoPerfil());
     }
+
+    @PutMapping("/emailUsuario")
+    @Operation(summary = "Validar email", description = "Validar email",
+            responses = {@ApiResponse(responseCode = "200",
+                    description = "Sucesso!",
+                    content = @Content(mediaType = "application/json",
+                            examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public String enviarEmail(@RequestParam Integer id, @RequestParam String emailNovo) {
+        Optional<Usuario> usuario = repository.findById(id);
+        try {
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+            int max = 100000;
+            int min = 999999;
+            int range = max - min + 1;
+            int res = 0;
+
+            // generate random numbers within 1 to 10
+            res = (int) (Math.random() * range) + min;
+
+
+            mailMessage.setFrom("meumenu.contato@gmail.com");
+            mailMessage.setText("Seu código de validação é de: " + res);
+            mailMessage.setSubject("CÓDIGO DE VALIDAÇÃO");
+            mailMessage.setTo(emailNovo);
+            javaMailSender.send(mailMessage);
+
+            usuario.get().setCodEmail(Integer.toString(res));
+
+
+            repository.save(usuario.get());
+
+            email_temp = emailNovo;
+            return "Email enviado com sucesso!";
+        } catch (Exception erro) {
+            throw new EmailException("Não foi possivel enviar o email");
+        }
+    }
+
+    @GetMapping("/validarEmail")
+    @Operation(summary = "Validar Email", description = "Validar Email", responses = {@ApiResponse(responseCode = "200", description = "Sucesso!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
+    @Transactional
+    @CrossOrigin
+    public ResponseEntity<String> validarEmail(@RequestParam String codigo, @RequestParam Integer id) {
+        Optional<Usuario> user = repository.findById(id);
+        try{
+            String cod_certo = user.get().getCodEmail();
+            if(cod_certo.equals(codigo)){
+                user.get().setCodEmail("valido");
+                user.get().setEmail(email_temp);
+                return ResponseEntity.status(200).body("Email Validado!");
+            }
+            return ResponseEntity.status(404).body("Código Inválido" + user.get().getCodEmail());
+        } catch(Exception erro){
+            throw new NaoEncontradoException("Erro!");
+        }
+    }
+
 
 }
