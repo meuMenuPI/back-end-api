@@ -52,7 +52,6 @@ public class UsuarioController {
     @Autowired
     private FavoritoRepository repositoryFavorito;
 
-    private String email_temp;
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -261,7 +260,7 @@ public class UsuarioController {
                             examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public String enviarEmail(@RequestParam Integer id, @RequestParam String emailNovo) {
+    public Optional<Usuario> enviarEmail(@RequestParam Integer id, @RequestParam String emailNovo) {
         Optional<Usuario> usuario = repository.findById(id);
         try {
 
@@ -287,8 +286,7 @@ public class UsuarioController {
 
             repository.save(usuario.get());
 
-            email_temp = emailNovo;
-            return "Email enviado com sucesso!";
+            return usuario;
         } catch (Exception erro) {
             throw new EmailException("Não foi possivel enviar o email");
         }
@@ -298,16 +296,16 @@ public class UsuarioController {
     @Operation(summary = "Validar Email", description = "Validar Email", responses = {@ApiResponse(responseCode = "200", description = "Sucesso!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<String> validarEmail(@RequestParam String codigo, @RequestParam Integer id) {
+    public Optional<Usuario> validarEmail(@RequestParam String codigo, @RequestParam Integer id, @RequestParam String novoEmail) {
         Optional<Usuario> user = repository.findById(id);
         try{
             String cod_certo = user.get().getCodEmail();
             if(cod_certo.equals(codigo)){
                 user.get().setCodEmail("valido");
-                user.get().setEmail(email_temp);
-                return ResponseEntity.status(200).body("Email Validado!");
+                user.get().setEmail(novoEmail);
+                return user;
             }
-            return ResponseEntity.status(404).body("Código Inválido" + user.get().getCodEmail());
+            throw  new NaoEncontradoException("Codigo errado!!");
         } catch(Exception erro){
             throw new NaoEncontradoException("Erro!");
         }
