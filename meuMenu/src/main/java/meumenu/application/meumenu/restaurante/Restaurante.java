@@ -43,6 +43,8 @@ public class Restaurante implements Recomendavel {
 
     }
 
+
+
     @Override
     public List recomendar(List<Usuario> listaUsuario, List<Restaurante> listaRestaurante, int id) {
         List<UsuarioDTO> listaRecomendacao = new ArrayList<>();

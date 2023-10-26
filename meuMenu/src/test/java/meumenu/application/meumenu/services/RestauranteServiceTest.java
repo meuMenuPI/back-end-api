@@ -89,6 +89,7 @@ class RestauranteServiceTest {
 
         RestauranteDTO resultado = service.listarPorId(idRestaurante);
 
+
         assertNotNull(resultado);
         assertEquals(restaurante.getId(), resultado.getId());
         assertEquals(restaurante.getNome(), resultado.getNome());
