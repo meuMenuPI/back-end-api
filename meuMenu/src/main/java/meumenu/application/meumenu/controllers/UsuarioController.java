@@ -21,9 +21,16 @@ import meumenu.application.meumenu.favorito.FavoritoRepository;
 import meumenu.application.meumenu.restaurante.Restaurante;
 import meumenu.application.meumenu.restaurante.RestauranteDTO;
 import meumenu.application.meumenu.restaurante.RestauranteRepository;
+import meumenu.application.meumenu.services.AuthService;
 import meumenu.application.meumenu.usuario.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +40,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.security.authentication.AuthenticationManager;
 
 @Tag(name = "Documentação dos end-points de usuarios", description = "Documentação viva dos usuarios feita via swagger")
 @RestController
@@ -44,16 +52,24 @@ public class UsuarioController {
     private RestauranteRepository repositoryRestaurante;
     @Autowired
     private FavoritoRepository repositoryFavorito;
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/cadastrar")
     @Operation(summary = "Metodo de cadastrar usuario", description = "Create User MeuMenu", responses = {@ApiResponse(responseCode = "200", description = "Sucesso usuario meu menu criado!", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 200, \"Status\" : \"Ok!\", \"Message\" :\"Sucesso usuario meu menu criado!\"}"),})), @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
-        repository.save(new Usuario(dados));
-        List<Usuario> tempUsuario = repository.findAll();
-        UsuarioDTO usuario = new UsuarioDTO(tempUsuario.get(tempUsuario.size() - 1).getId(), dados.nome(), dados.sobrenome(), dados.email(), dados.tipoComidaPreferida().name(), null);
-        return ResponseEntity.status(200).body(usuario);
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroUsuario dados) {
+        //String encryptedPassword = new BCryptPasswordEncoder().encode(dados.senha());
+       // DadosCadastroUsuario dadosEncrypted = new DadosCadastroUsuario(dados.nome(),dados.sobrenome(),dados.cpf(),dados.email(),encryptedPassword,dados.tipoComidaPreferida(), dados.fotoPerfil());
+       // repository.save(new Usuario(dadosEncrypted));
+        //List<Usuario> tempUsuario = repository.findAll();
+       // UsuarioDTO usuario = new UsuarioDTO(tempUsuario.get(tempUsuario.size() - 1).getId(), dados.nome(), dados.sobrenome(), dados.email(), dados.tipoComidaPreferida().name(), null);
+       // return ResponseEntity.status(200).body(usuario);
+        return authService.cadastrar(dados);
     }
 
     @GetMapping
@@ -114,15 +130,15 @@ public class UsuarioController {
                     examples = {@ExampleObject(value = "{\"code\" : 400, \"Status\" : \"Erro\", \"Message\" :\"Bad request\"}"),}))})
     @Transactional
     @CrossOrigin
-    public ResponseEntity<UsuarioDTO> logar(@RequestBody UsuarioDtoLogar dados) {
+    public ResponseEntity logar(@RequestBody UsuarioDtoLogar dados) {
+        //Optional<Usuario> b = repository.findByEmailAndSenha(dados.getEmail(),dados.getSenha());
 
-        Optional<Usuario> b = repository.findByEmailAndSenha(dados.getEmail(),dados.getSenha());
-
-        if(b == null){
-            return ResponseEntity.status(404).build();
-        }
-
-        return ResponseEntity.status(200).body(new UsuarioDTO(b.get().getId(), b.get().getNome(), b.get().getSobrenome(), b.get().getEmail(), b.get().getTipoComidaPreferida().name(), b.get().getFotoPerfil()));
+      // if(b == null){
+         //   return ResponseEntity.status(404).build();
+       // }
+      //  return ResponseEntity.ok().build();
+        ResponseEntity response = authService.logar(dados);
+        return response;
     }
 
     @DeleteMapping("/{id}")
