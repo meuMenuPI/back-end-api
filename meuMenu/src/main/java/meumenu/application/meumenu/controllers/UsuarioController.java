@@ -311,5 +311,47 @@ public class UsuarioController {
         }
     }
 
+    @PutMapping("/trocarSenha")
+    public ResponseEntity<String> trocarSenha(@RequestParam Integer id, @RequestParam String senhaAtual, @RequestParam String novaSenha) {
+        Optional<Usuario> optionalUsuario = repository.findById(id);
+
+        try {
+            if (optionalUsuario.isPresent()) {
+                Usuario usuario = optionalUsuario.get();
+                String senhaArmazenada = usuario.getSenha();
+
+                if (senhaArmazenada.equals(senhaAtual)) {
+                    // Crie um novo objeto Usuario com a senha atualizada
+                    Usuario usuarioAtualizado = new Usuario(
+                            usuario.getId(),
+                            usuario.getNome(),
+                            usuario.getSobrenome(),
+                            usuario.getCpf(),
+                            usuario.getEmail(),
+                            novaSenha, // Use a nova senha, não a senha atualizada
+                            usuario.getFotoPerfil(),
+                            usuario.getCodEmail(),
+                            usuario.getTipoComidaPreferida()
+                    );
+
+                    // Salve o novo objeto no repositório
+                    repository.save(usuarioAtualizado);
+
+                    System.out.println("Caiu sucesso");
+                    return ResponseEntity.status(200).body("Senha alterada com sucesso!");
+                } else {
+                    System.out.println("Caiu erro do sucesso");
+                    return ResponseEntity.status(400).body("Senha atual incorreta");
+                }
+            } else {
+                System.out.println("Caiu erro");
+                return ResponseEntity.status(404).body("Usuário não encontrado");
+            }
+        } catch (Exception erro) {
+            System.out.println("Erro");
+            throw new NaoEncontradoException("Erro!");
+        }
+    }
+
 
 }
